@@ -1,5 +1,8 @@
+import { theme } from "antd";
+
 // Light theme tokens
 export const lightTheme = {
+  algorithm: theme.defaultAlgorithm,
   token: {
     // -------- Color Tokens --------
     // Primary Colors
@@ -64,4 +67,11 @@ export const lightTheme = {
     titleFontWeight: 600, // Default font weight for titles
     headingFontWeight: 700, // Default font weight for heading tags
   },
+  components: {
+    Layout:{
+      headerBg: "#FFFFFF",
+      footerBg: "#FFFFFF",
+      algorithm: true
+    }
+  }
 };

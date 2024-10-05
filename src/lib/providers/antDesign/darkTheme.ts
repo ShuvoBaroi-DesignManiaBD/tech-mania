@@ -2,7 +2,7 @@ import { theme } from "antd";
 
 // Dark theme tokens
 export const darkTheme = {
-  // algorithm: theme.darkAlgorithm,
+  algorithm: theme.darkAlgorithm,
     token: {
       // -------- Color Tokens --------
       // Primary Colors
@@ -67,4 +67,10 @@ export const darkTheme = {
       titleFontWeight: 600, // Default font weight for titles
       headingFontWeight: 700, // Default font weight for heading tags
     },
+    components: {
+      Layout:{
+        headerBg: "#161B22",
+        footerBg: "#161B22",
+      }
+    }
   };

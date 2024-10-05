@@ -4,7 +4,7 @@ import { themes } from '@/constant';
  
 
 interface themeState {
-  theme: string; // Add a property for filtered products
+  theme: string; // Add a property for filtered theme
 }
 
 const initialState: themeState = {
