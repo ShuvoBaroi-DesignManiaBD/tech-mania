@@ -1,0 +1,8 @@
+.ant-card-meta-description{
+    margin-top: -10px
+}
+
+.ant-col{
+    align-self: normal;
+    /* flex:1; */
+}

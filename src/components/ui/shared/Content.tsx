@@ -7,9 +7,7 @@ const { Content:ContentPart} = Layout;
 const Content = ({ children }: { children: React.ReactNode }) => {
     return (
         <ContentPart style={{maxWidth:"100vw"}}>
-            <WrapperContainer>
             {children}
-            </WrapperContainer>
         </ContentPart>
     );
 };

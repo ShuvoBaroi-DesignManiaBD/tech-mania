@@ -14,6 +14,7 @@ export const lightTheme = {
 
     // Neutral Colors
     colorBgBase: "#F8FAFC", // Background color for the layout
+    colorBgLayout: "#F8FAFC", // Background color for the layout
     colorText: "#1F2937", // Base text color (Dark Gray)
     colorTextHeading: "#1E3A8A", // Text color for headings (Dark Blue)
     colorTextSecondary: "#4B5563", // Text color for secondary text
@@ -45,13 +46,13 @@ export const lightTheme = {
     fontSizeHeading6: 16, // H6 - 16px
 
     // Line Heights
-    lineHeightBase: 1.6, // Default line height for body text
-    lineHeightHeading1: 1.3, // Line height for H1
-    lineHeightHeading2: 1.4, // Line height for H2
-    lineHeightHeading3: 1.4, // Line height for H3
-    lineHeightHeading4: 1.5, // Line height for H4
-    lineHeightHeading5: 1.5, // Line height for H5
-    lineHeightHeading6: 1.6, // Line height for H6
+    // lineHeightBase: 1.6, // Default line height for body text
+    // lineHeightHeading1: 1.3, // Line height for H1
+    // lineHeightHeading2: 1.4, // Line height for H2
+    // lineHeightHeading3: 1.4, // Line height for H3
+    // lineHeightHeading4: 1.5, // Line height for H4
+    // lineHeightHeading5: 1.5, // Line height for H5
+    // lineHeightHeading6: 1.6, // Line height for H6
 
     // Font Weights
     fontWeightBase: 400, // Base font weight (Regular)
@@ -71,7 +72,6 @@ export const lightTheme = {
     Layout:{
       headerBg: "#FFFFFF",
       footerBg: "#FFFFFF",
-      algorithm: true
     }
   }
 };

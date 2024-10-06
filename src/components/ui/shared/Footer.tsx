@@ -10,7 +10,7 @@ import { selectCurrentTheme } from "@/redux/features/theme/themeSlice";
 import { FacebookFilled, GithubFilled, InstagramFilled, InstagramOutlined, LinkedinFilled, TwitterOutlined } from "@ant-design/icons";
 
 const { Footer:FooterPart } = Layout;
-const Footer = ({ className }: {className:string}) => {
+const Footer = ({ className }: {className?:string}) => {
   const currentTheme = useAppSelector(selectCurrentTheme);
   const isDark = currentTheme === "dark";
     const {
@@ -38,7 +38,7 @@ const Footer = ({ className }: {className:string}) => {
                     <Link
                       href="/"
                     >
-                      <Typography.Link style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Home</Typography.Link>
+                      <Typography style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Home</Typography>
                       
                     </Link>
                   </li>
@@ -46,7 +46,7 @@ const Footer = ({ className }: {className:string}) => {
                     <Link
                       href="/about"
                     >
-                       <Typography.Link style={{color:!isDark ? token.colorText:'', fontWeight:400}}>About</Typography.Link>
+                       <Typography style={{color:!isDark ? token.colorText:'', fontWeight:400}}>About</Typography>
                     </Link>
                   </li>
                 </ul>
@@ -60,14 +60,14 @@ const Footer = ({ className }: {className:string}) => {
                     <Link
                       href="/"
                     >
-                       <Typography.Link style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Github</Typography.Link>
+                       <Typography style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Github</Typography>
                     </Link>
                   </li>
                   <li>
                     <Link
                       href="/"
                     >
-                       <Typography.Link style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Discord</Typography.Link>
+                       <Typography style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Discord</Typography>
                     </Link>
                   </li>
                 </ul>
@@ -79,14 +79,14 @@ const Footer = ({ className }: {className:string}) => {
                     <Link
                       href="/"
                     >
-                       <Typography.Link style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Privacy Policy</Typography.Link>
+                       <Typography style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Privacy Policy</Typography>
                     </Link>
                   </li>
                   <li>
                     <Link
                       href="/"
                     >
-                       <Typography.Link style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Terms &amp; Conditions</Typography.Link>
+                       <Typography style={{color:!isDark ? token.colorText:'', fontWeight:400}}>Terms &amp; Conditions</Typography>
                     </Link>
                   </li>
                 </ul>
