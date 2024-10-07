@@ -8,13 +8,35 @@ type TButton = {
   type?: BaseButtonProps["type"];
   size?: BaseButtonProps["size"];
   href?: string;
-  children?: string | ReactNode
+  children?: string | ReactNode;
+  onClick?: () => void;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
-const Button = ({ type = "default", size = "middle", href = "/", children }: TButton) => {
+const Button = ({
+  type = "default",
+  size = "middle",
+  href,
+  children,
+  onClick,
+  className = '',
+  style = {}
+}: TButton) => {
+  // If `href` is provided, render the button with a `Link` wrapper
+  if (href) {
+    return (
+      <Link href={href} legacyBehavior>
+        <AntButton type={type} size={size} className={className} style={style}>
+          {children}
+        </AntButton>
+      </Link>
+    );
+  }
+
   return (
-    <AntButton type={type} size={size}>
-      <Link href={href}>{children}</Link>
+    <AntButton type={type} size={size} onClick={onClick} className={className} style={style}>
+      {children}
     </AntButton>
   );
 };

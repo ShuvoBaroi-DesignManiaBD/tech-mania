@@ -14,7 +14,6 @@ const Header = () => {
   const [pathname, setPathName] = useState(path?.substring(1));
 
   useEffect(() => {
-    // Update pathname whenever the route changes
     setPathName(path?.substring(1));
   }, [path]);
 
@@ -27,6 +26,10 @@ const Header = () => {
       key: "about",
       label: <CustomLink href="/about">About</CustomLink>,
     },
+    {
+      key: "contact",
+      label: <CustomLink href="/contact">Contact Us</CustomLink>, // Full text label
+    },
   ];
 
   const dispatch = useAppDispatch();
@@ -34,7 +37,7 @@ const Header = () => {
   const isDark = currentTheme === "dark";
 
   return (
-    <HeaderPart className="flex justify-between !w-[100vw] !px-5">
+    <HeaderPart className="flex justify-between !max-w-[100vw] !px-5 sticky top-0 z-50 shadow-sm">
       <Space
         direction="horizontal"
         align="center"
@@ -43,10 +46,18 @@ const Header = () => {
         <Logo />
         <div className="flex items-center justify-end gap-5 flex-grow">
           <Menu
-            mode="inline" // Set the menu mode to horizontal
-            selectedKeys={[pathname && pathname.length > 0 ? pathname : "home"]} // Dynamically update selected key
+            mode="horizontal" // Set the menu mode to horizontal
+            selectedKeys={[pathname && pathname.length > 0 ? pathname : "home"]}
             items={menuItems}
-            className="md:!flex !border-0 !mr-5 [&&_li]:!px-4 [&&_li]:!h-10 hidden"
+            className="md:flex !border-0 !mr-5"
+            style={{
+              lineHeight: "inherit",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "4px", // Use spacing between items
+            }}
+            // Ensure no padding is added to the list items
           />
           <Button
             size="small"

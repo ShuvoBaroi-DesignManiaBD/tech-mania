@@ -19,6 +19,11 @@ export const darkTheme = {
       colorTextSecondary: "#8B949E", // Text color for secondary text
       colorBorder: "#30363D", // Border color for dividers and components
 
+      // Hero Section Background
+      homeHeroBg: "#233044",
+      heroBg: "#161B22",
+      communitySectionBg: "#1E3A8A",
+
       // Backgrounds
       colorBgContainer: "#161B22", // Container backgrounds (cards, modals, etc.)
       colorBgElevated: "#21262D", // Elevated component backgrounds (hovered states)
@@ -38,10 +43,10 @@ export const darkTheme = {
 
       // Custom Heading Font Sizes
       fontSizeHeading1: 40, // H1 - 40px
-      fontSizeHeading2: 32, // H2 - 32px
-      fontSizeHeading3: 28, // H3 - 28px
-      fontSizeHeading4: 24, // H4 - 24px
-      fontSizeHeading5: 20, // H5 - 20px
+      fontSizeHeading2: 28, // H2 - 32px
+      fontSizeHeading3: 24, // H3 - 28px
+      fontSizeHeading4: 20, // H4 - 24px
+      fontSizeHeading5: 18, // H5 - 20px
       fontSizeHeading6: 16, // H6 - 16px
 
       // Line Heights

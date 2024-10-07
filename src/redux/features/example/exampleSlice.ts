@@ -15,7 +15,6 @@ const exampleSlice = createSlice({
   initialState,
   reducers: {
     setExample(state, action: PayloadAction<[]>) {
-      console.log(state, action);
       state.examples = action.payload;
     }
   },

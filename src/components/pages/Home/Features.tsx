@@ -34,7 +34,7 @@ const KeyFeatures = () => {
 
       {/* Section Title */}
       <div className="text-center mb-12">
-        <Title level={2}>Why Join Tech Tips & Tricks Hub?</Title>
+        <Title level={2}>Why Join <br></br>Tech Tips & Tricks Hub?</Title>
         <Text className="text-gray-600">
           Explore the key features that make our platform the go-to place for tech enthusiasts.
         </Text>

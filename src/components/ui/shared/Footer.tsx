@@ -16,7 +16,6 @@ const Footer = ({ className }: {className?:string}) => {
     const {
       token
     } = theme.useToken();
-  console.log(token);
   
   return (
     <FooterPart className={`${className}`}>
