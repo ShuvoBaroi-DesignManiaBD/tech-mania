@@ -10,7 +10,7 @@ const Logo = ({ className }: { className?: string }) => {
         src="/logo.webp"
         alt="logo"
         width={160}
-        height={80}
+        height={120}
         className={`${className}`}
       />
     </Link>

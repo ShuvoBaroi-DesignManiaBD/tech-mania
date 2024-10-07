@@ -51,17 +51,18 @@ const ContactInfo = () => {
           <div className="flex space-x-4 pt-10">
             <Tooltip title="Twitter">
               <Link href="https://twitter.com">
-                <TwitterOutlined className="text-2xl text-secondary hover:text-secondaryLight cursor-pointer" />
+                <TwitterOutlined style={{color:token?.colorTextHeading}} className="text-2xl text-secondary hover:text-secondaryLight cursor-pointer" />
               </Link>
             </Tooltip>
             <Tooltip title="Facebook">
               <Link href="https://facebook.com">
-                <FacebookFilled className="text-2xl text-secondary hover:text-secondaryLight cursor-pointer" />
+                <FacebookFilled style={{color:token?.colorTextHeading}} className="text-2xl text-secondary hover:text-secondaryLight cursor-pointer" />
               </Link>
             </Tooltip>
             <Tooltip title="LinkedIn">
               <Link href="https://linkedin.com">
                 <LinkedinOutlined
+                style={{color:token?.colorTextHeading}}
                   className="text-2xl text-secondary hover:text-secondaryLight cursor-pointer"
                   href="https://linkedin.com"
                 />

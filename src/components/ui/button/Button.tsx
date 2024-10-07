@@ -6,6 +6,7 @@ import { ReactNode } from "react";
 
 type TButton = {
   type?: BaseButtonProps["type"];
+  icon?: ReactNode,
   size?: BaseButtonProps["size"];
   href?: string;
   children?: string | ReactNode;
@@ -18,6 +19,7 @@ const Button = ({
   type = "default",
   size = "middle",
   href,
+  icon=null,
   children,
   onClick,
   className = '',
@@ -27,7 +29,7 @@ const Button = ({
   if (href) {
     return (
       <Link href={href} legacyBehavior>
-        <AntButton type={type} size={size} className={className} style={style}>
+        <AntButton type={type} size={size} className={className} style={style} icon={icon}>
           {children}
         </AntButton>
       </Link>
@@ -35,7 +37,7 @@ const Button = ({
   }
 
   return (
-    <AntButton type={type} size={size} onClick={onClick} className={className} style={style}>
+    <AntButton type={type} size={size} onClick={onClick} className={className} style={style} icon={icon}>
       {children}
     </AntButton>
   );

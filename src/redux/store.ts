@@ -1,15 +1,17 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import { baseAPI } from "./api/baseApi";
-import exampleSlice from "./features/example/exampleSlice";
 import themeSlice from "./features/theme/themeSlice";
+import deviceSlice from "./features/device/deviceSlice";
+import offCanvasSlice from "./features/ui/offCanvas/offCanvasSlice";
 
 
 export const store = configureStore({
   reducer: {
     [baseAPI.reducerPath]: baseAPI.reducer,
-    examples: exampleSlice,
     theme: themeSlice,
+    device: deviceSlice,
+    offCanvas: offCanvasSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseAPI.middleware),

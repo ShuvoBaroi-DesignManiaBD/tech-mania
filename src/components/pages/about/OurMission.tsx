@@ -18,12 +18,12 @@ const OurMission = () => {
           >
             Our Mission
           </Title>
-          <Typography.Text className="text-base leading-relaxed xl:!w-1/4 lg:!w-1/4 mx-auto text-gray-500">
+          <Typography.Text className="text-base leading-relaxed xl:!w-1/4 lg:!w-1/4 mx-auto">
             At our core, we strive to create a positive impact through our dedication and values. Our mission is shaped by the following principles:
           </Typography.Text>
         </div>
         <div className="container mx-auto">
-          <div className="flex gap-6">
+          <div className="flex flex-col md:flex-row gap-6">
             {/* Mission 1: Driving Innovation */}
               <Card
                 hoverable

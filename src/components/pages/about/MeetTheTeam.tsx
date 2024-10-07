@@ -3,28 +3,29 @@ import { Typography, Card } from "antd";
 import Meta from "antd/es/card/Meta";
 import Image from "next/image";
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 const teamMembers = [
     {
       name: "Shuvo Baroi",
-      position: "Founder & CEO",
+      position: "Founder & Lead Developer",
       image: "https://i.ibb.co.com/4JRDX8Z/profile-pic-4.webp",
       bio: "Shuvo is a Well known Full Stack Developer expertise in React JS, Next JS, SQL, MongoDB, WordPress & UI/UX.",
     },
     {
       name: "Jane Smith",
-      position: "Head of Marketing",
+      position: "Community Manager",
       image: "https://via.placeholder.com/150",
-      bio: "Jane is a digital marketing expert who drives all our successful campaigns.",
+      bio: "Jane is responsible for fostering our vibrant community and ensuring that everyone has a positive experience on our platform.",
     },
     {
-      name: "Sam Wilson",
-      position: "Lead Designer",
+      name: "Mike Anderson",
+      position: "Content Strategist",
       image: "https://via.placeholder.com/150",
-      bio: "Sam's creativity and attention to detail ensure our designs are top-notch.",
+      bio: "Mike oversees the creation of our guides and tutorials, ensuring that every piece of content meets our high-quality standards.",
     },
-  ];
+];
+
 
 const MeetTheTeam = () => {
   return (
@@ -65,7 +66,7 @@ const MeetTheTeam = () => {
                         <span className="text-secondary text-base">
                           {member.position}
                         </span>
-                        <p className="text-base mt-2 text-gray-600">
+                        <p className="text-base mt-2">
                           {member.bio}
                         </p>
                       </>

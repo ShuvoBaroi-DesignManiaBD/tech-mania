@@ -28,7 +28,7 @@ const Hero = () => {
           </Title>
 
           {/* Description */}
-          <Typography.Text className="!w-4/5 md:!w-4/5 text-base lg:text-lg text-gray-600 mb-4">
+          <Typography.Text className="!w-4/5 md:!w-4/5 text-base lg:text-lg mb-4">
             Whether you're a novice tech enthusiast or a seasoned professional,
             our platform offers everything you need to stay ahead in the tech
             game. From in-depth tutorials to quick tips and industry news, we’ve
