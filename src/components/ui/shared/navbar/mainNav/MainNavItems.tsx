@@ -1,20 +1,20 @@
 // import { menuItem } from "@/types/menu.type";
 
+import CustomLink from "@/components/ui/CustomLink";
 import { MenuItemType } from "antd/es/menu/interface";
-import Link from "next/link";
 
 const MainNavItems: MenuItemType[] = [
   {
-    key: 1,
-    label: <Link href="/">Home</Link>
+    key: 'home',
+    label: <CustomLink href="/">Home</CustomLink>
   },
   {
-    key: 2,
-    label: <Link href="/about">About</Link>,
+    key: 'about',
+    label: <CustomLink href="/about">About</CustomLink>,
   },
   {
-    key: 4,
-    label: <Link href="/contact">contact</Link>,
+    key: 'contact',
+    label: <CustomLink href="/contact">contact</CustomLink>,
   },
 ];
 

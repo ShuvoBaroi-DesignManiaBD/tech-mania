@@ -15,7 +15,7 @@ const AntThemeProvider = ({ children }: { children: ReactNode }) => {
     <ConfigProvider theme={isDark ? darkTheme : lightTheme}>
       <div className={`antialiased min-h-screen`}>
         <AntdRegistry>
-          <Layout className="min-h-screen">{children}</Layout>
+          <Layout className="!min-h-screen">{children}</Layout>
         </AntdRegistry>
       </div>
     </ConfigProvider>
