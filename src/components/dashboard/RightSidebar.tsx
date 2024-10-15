@@ -14,7 +14,7 @@ const RightSidebar = () => {
           <Input.Search placeholder="Search..." className="mb-6" />
           {/* Additional Cards */}
           <Card className="mb-4">
-            <Title level={4}>What's Happening</Title>
+            <Title level={4}>What Happening</Title>
             <Typography.Text>Some interesting news or updates go here.</Typography.Text>
           </Card>
           <Card>

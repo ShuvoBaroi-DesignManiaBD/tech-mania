@@ -1,8 +1,9 @@
-import { theme } from "antd";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { TCustomTheme } from "@/types/global.type";
+
 
 // Light theme tokens
-export const lightTheme = {
-  algorithm: theme.defaultAlgorithm,
+export const lightTheme: TCustomTheme = {
   token: {
     // -------- Color Tokens --------
     // Primary Colors
@@ -27,6 +28,7 @@ export const lightTheme = {
     // Section Background
     homeHeroBg: "#E0F2FE",
     heroBg: "#E0F2FE",
+    secondaryBorder: "#dfdfdf",
     communitySectionBg: "#1E3A8A",
 
     // Success & Error
@@ -74,9 +76,9 @@ export const lightTheme = {
     headingFontWeight: 800, // Default font weight for heading tags
   },
   components: {
-    Layout:{
+    Layout: {
       headerBg: "#FFFFFF",
       footerBg: "#FFFFFF",
-    }
-  }
+    },
+  },
 };

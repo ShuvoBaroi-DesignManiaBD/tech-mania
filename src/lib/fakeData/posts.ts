@@ -1,3 +1,4 @@
+"use client";
 import { IPostCard } from "@/types/post.type";
 
 export const postsData: IPostCard[] = [

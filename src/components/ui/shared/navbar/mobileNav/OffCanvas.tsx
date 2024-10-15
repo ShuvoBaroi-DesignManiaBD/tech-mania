@@ -5,7 +5,6 @@ import { selectOffCanvasState, setOffCanvasState } from "@/redux/features/ui/off
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { CloseOutlined } from "@ant-design/icons";
 import { Drawer } from "antd";
-import Link from "next/link";
 import MainNavItems from "../mainNav/MainNavItems";
 
 const OffCanvas = () => {
@@ -36,14 +35,20 @@ const OffCanvas = () => {
         open={offCanvasState}
         onClose={toggleOffCanvas}
         className="z-50"
-        bodyStyle={{ padding: "0" }} // Remove extra padding inside the drawer
-        headerStyle={{ padding: "0.5rem 1rem" }} // Adjust header padding
-        contentWrapperStyle={{
+        styles={{header: { padding: "0.5rem 1rem" }, body:{ padding: "0" }, content:{
           width: "100vw", // Ensure the Drawer covers the full width
           maxWidth: "100vw", // Override internal maxWidth limits
           position: "absolute", // Use absolute positioning to cover the screen
           left: 0, // Ensure alignment to the left
-        }}
+        }}}
+        // bodyStyle={{ padding: "0" }} // Remove extra padding inside the drawer
+        // headerStyle={{ padding: "0.5rem 1rem" }} // Adjust header padding
+        // contentWrapperStyle={{
+        //   width: "100vw", // Ensure the Drawer covers the full width
+        //   maxWidth: "100vw", // Override internal maxWidth limits
+        //   position: "absolute", // Use absolute positioning to cover the screen
+        //   left: 0, // Ensure alignment to the left
+        // }}
       >
         <ul
           id="mainNav"

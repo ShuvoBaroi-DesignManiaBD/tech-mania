@@ -1,7 +1,7 @@
 import { RootState } from "@/redux/store";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = window.innerWidth <= 550;
+const initialState = false;
 
 const deviceSlice = createSlice({
   name: "device",

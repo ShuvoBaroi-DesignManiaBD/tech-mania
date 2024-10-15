@@ -5,7 +5,6 @@ import {
   Typography,
   Avatar,
   Divider,
-  Space,
   Button,
   Tooltip,
 } from "antd";
@@ -20,9 +19,8 @@ import {
 import { formatDistanceToNow } from "date-fns"; // To format date
 import { IPostCard } from "@/types/post.type";
 import Image from "next/image";
-import CommentSection from "../dashboard/contentArea/CommentSection";
 import PostCardWithComments from "./PostCardWithComments";
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 // PostCard Component to display a post and its comments
 const PostCard = ({

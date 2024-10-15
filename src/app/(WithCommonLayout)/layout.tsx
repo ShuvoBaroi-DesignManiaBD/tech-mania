@@ -5,9 +5,6 @@ import Header from "@/components/ui/shared/header/Header";
 import { Flex } from "antd";
 
 const layout = ({ children }: { children: React.ReactNode }) => {
-  //   const {
-  //     token: { colorBgContainer, borderRadiusLG },
-  //   } = theme.useToken();
   return (
     <Flex
       vertical

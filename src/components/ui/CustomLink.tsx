@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 export default function CustomLink({ href, prefetch = true, children }:{ href:string, prefetch?:boolean, children:string|ReactNode }) {
-    const pathname = usePathname();
-    const active = pathname === href;
+    // const pathname = usePathname();
+    // const active = pathname === href;
 
     return (
         <Link

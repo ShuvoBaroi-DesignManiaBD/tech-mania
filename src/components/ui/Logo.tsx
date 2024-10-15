@@ -8,9 +8,11 @@ const Logo = ({ className }: { className?: string }) => {
     <Link href="/">
       <Image
         src="/logo.webp"
+        priority={true}
         alt="logo"
         width={160}
-        height={120}
+        height={50}
+        style={{width:"auto", height:"auto"}}
         className={`${className}`}
       />
     </Link>

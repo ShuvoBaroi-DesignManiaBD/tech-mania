@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Card, Button, Typography, theme, Tag } from "antd";
 import Image from "next/image";

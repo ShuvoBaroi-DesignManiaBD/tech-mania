@@ -4,11 +4,70 @@
 
 /* Custom class to hide scrollbars */
 .scrollbar-hide::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+  display: none;
+  /* Hide scrollbar for Chrome, Safari, and Opera */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+
+/* root css file */
+.quill>* {
+  border-color: inherit !important;
+  color: inherit !important;
+}
+
+.quill>.ql-toolbar {
+  /* border radius of the toolbar /
+  border-radius: 10px 10px 0 0;
   }
-  
-  .scrollbar-hide {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+  .quill > .ql-container {
+  / border radius of the container and for font size*/
+  font-size: inherit;
+  border-radius: 0 0 10px 10px;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label {
+  color: inherit !important;
+  opacity: 0.76;
+}
+
+.ql-snow .ql-picker {
+  color: inherit !important;
+}
+
+.quill>.ql-container>.ql-editor.ql-blank::before {
+  /* for placeholder /
+  color: inherit;
   }
-  
+  .ql-snow.ql-toolbar button svg {
+  opacity: 0.76;
+  color: currentColor;
+  }
+  .ql-snow .ql-stroke {
+  / for the border of the editor /
+  stroke: currentColor !important;
+  }
+  .ql-snow .ql-fill {
+  / for the bg color /
+  fill: currentColor !important;
+  }
+  .ql-picker-item {
+  / for dropdown */
+  color: #5f5f5f !important;
+  font-size: 16px;
+}
+
+.ant-progress-inner,
+.ant-progress .ant-progress-bg {
+  border-radius: 0 !important;
+}
+
+.ant-progress-inner {
+  background-color: #1E3A8A !important;
+}

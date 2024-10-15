@@ -1,6 +1,5 @@
 "use client";
 import { Layout} from "antd";
-import WrapperContainer from "./WrapperContainer.";
 
 const { Content:ContentPart} = Layout;
 

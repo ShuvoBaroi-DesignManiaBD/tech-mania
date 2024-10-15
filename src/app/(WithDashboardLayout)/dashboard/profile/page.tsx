@@ -4,8 +4,6 @@ import { CheckCircleOutlined, EditOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Card,
-  Col,
-  Row,
   Space,
   Tag,
   Typography,
@@ -16,7 +14,7 @@ import Title from "antd/es/typography/Title";
 
 const Page = () => {
   return (
-    <div>
+    <div className="columns-1 space-y-5">
       <Card
         className="shadow-md mb-8 p-0"
         bordered={false}
@@ -47,9 +45,9 @@ const Page = () => {
                   className="flex items-center !mb-0 !leading-0 gap-1"
                 >
                   Shuvo
-                  {"Shuvo" && (
+                 
                     <CheckCircleOutlined className="text-light-primary size-5" />
-                  )}
+                  
                 </Title>
                 <Typography.Text className="!text-sm leading-0 mb-2 -mt-1">
                   @{`shuvobaroi`}
@@ -91,16 +89,15 @@ const Page = () => {
         </div>
       </Card>
 
-      <Row gutter={16}>
+      <div className="flex gap-5">
         {/* Left Sidebar: Profile Details */}
-        <Col xs={24} md={8}>
+        <div className="w-1/2" style={{
+              borderRadius: "8px",
+            }}>
           <Card
             title="Profile Information"
             className="mb-4"
             bordered={false}
-            style={{
-              borderRadius: "8px",
-            }}
           >
             <Paragraph>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
@@ -119,15 +116,9 @@ const Page = () => {
               Member since:{" "}
               <Typography.Text strong>January 2020</Typography.Text>
             </Paragraph>
-          </Card>
-
           {/* Follow & Message Buttons */}
-          <Card
-            className="mb-4"
-            bordered={false}
-            style={{
-              borderRadius: "8px",
-            }}
+          <div
+            className="mt-12"
           >
             <AntButton type="primary" block>
               Follow
@@ -135,18 +126,19 @@ const Page = () => {
             <AntButton block className="mt-2">
               Message
             </AntButton>
+          </div>
           </Card>
-        </Col>
+
+        </div>
 
         {/* Right Content: User's Posts */}
-        <Col xs={24} md={16}>
+        <div>
           <Card
             title="Recent Posts"
             bordered={false}
-            style={{
-              borderRadius: "8px",
-            }}
+            className="rounded-8"
           >
+            <div className="space-y-5">
             {/* Sample Post */}
             <Card
               type="inner"
@@ -179,9 +171,10 @@ const Page = () => {
                 scalable web applications. Here are some tips to get started.
               </Paragraph>
             </Card>
+            </div>
           </Card>
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 };

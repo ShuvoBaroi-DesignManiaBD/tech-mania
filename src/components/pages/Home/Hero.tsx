@@ -1,3 +1,5 @@
+// @typescript-eslint/no-unused-vars
+'use client';
 import { theme, Typography } from "antd";
 import Image from "next/image";
 import WrapperContainer from "../../ui/shared/WrapperContainer.";
@@ -46,6 +48,7 @@ const Hero = () => {
         <div className="text-end">
           <Image
             src="https://socialv.iqonic.design/wp-content/uploads/2023/03/Group-36648.png" // Replace with the path to your image
+            priority={true}
             alt="Hero Section Image"
             width={600}
             height={400}

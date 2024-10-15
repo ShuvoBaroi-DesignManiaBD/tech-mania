@@ -1,4 +1,5 @@
-import { Typography, Card, Row, Col, Space, Flex } from 'antd';
+"use client";
+import { Typography, Card, Flex } from 'antd';
 import { DesktopOutlined, TeamOutlined, BellOutlined, DashboardOutlined } from '@ant-design/icons';
 import "./feature.css"
 import WrapperContainer from '@/components/ui/shared/WrapperContainer.';

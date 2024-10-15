@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 import { Flex, Spin } from "antd";
 
 export default function loading() {

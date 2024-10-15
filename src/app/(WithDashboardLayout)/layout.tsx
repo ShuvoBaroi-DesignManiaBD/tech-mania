@@ -4,28 +4,28 @@ import Header from "@/components/dashboard/header";
 import LeftSidebar from "@/components/dashboard/LeftSidebar";
 import RightSidebar from "@/components/dashboard/RightSidebar";
 import ContentArea from "@/components/dashboard/contentArea/ContentArea";
-import { Layout, theme } from "antd";
+import { Layout as AntdLayout } from "antd";
+import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 
 // const { Title, Text, Paragraph } = Typography;
 
-const ProfilePage = ({children}:{children:ReactNode}) => {
+const Layout = ({children}:{children:ReactNode}) => {
   // Sample Data
-  const user = {
-    name: "John Doe",
-    username: "johndoe",
-    profilePicture:
-      "https://i.pravatar.cc/150?img=3", // Replace with user's profile picture URL
-    isVerified: true,
-    posts: 45,
-    followers: 1200,
-    following: 180,
-  };
-  const { token } = theme.useToken();
+  // const user = {
+  //   name: "John Doe",
+  //   username: "johndoe",
+  //   profilePicture:
+  //     "https://i.pravatar.cc/150?img=3", // Replace with user's profile picture URL
+  //   isVerified: true,
+  //   posts: 45,
+  //   followers: 1200,
+  //   following: 180,
+  // };
 
   return (
-    <Layout style={{backgroundColor:token?.colorBgBase}}>
+    <AntdLayout style={{backgroundColor:TokenProvider()?.colorBgBase}}>
     <Header className="px-8"></Header>
-    <Layout className="h-screen fixed w-screen top-20">
+    <AntdLayout className="h-screen fixed w-screen top-20">
       {/* Left Sidebar */}
       <LeftSidebar></LeftSidebar>
 
@@ -39,10 +39,10 @@ const ProfilePage = ({children}:{children:ReactNode}) => {
 
       {/* Right Sidebar */}
       <RightSidebar></RightSidebar>
-    </Layout>
-    </Layout>
+    </AntdLayout>
+    </AntdLayout>
       
   );
 };
 
-export default ProfilePage;
+export default Layout;

@@ -4,10 +4,9 @@ import { Divider, Layout, theme, Typography } from "antd";
 import Link from "next/link";
 import Logo from "../Logo";
 import Title from "antd/es/typography/Title";
-import useToken from "antd/es/theme/useToken";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentTheme } from "@/redux/features/theme/themeSlice";
-import { FacebookFilled, GithubFilled, InstagramFilled, InstagramOutlined, LinkedinFilled, TwitterOutlined } from "@ant-design/icons";
+import { FacebookFilled, GithubFilled,  InstagramOutlined, LinkedinFilled, TwitterOutlined } from "@ant-design/icons";
 
 const { Footer:FooterPart } = Layout;
 const Footer = ({ className }: {className?:string}) => {
@@ -106,9 +105,7 @@ const Footer = ({ className }: {className?:string}) => {
               . All Rights Reserved.
             </span>
             <div className="flex mt-4 space-x-6 justify-center sm:mt-0">
-              <Link
-                href="/"
-              >
+              <Link href="/">
                 <FacebookFilled></FacebookFilled>
               </Link>
               <Link

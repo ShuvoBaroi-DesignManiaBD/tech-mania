@@ -1,9 +1,9 @@
 "use client";
 import WrapperContainer from "@/components/ui/shared/WrapperContainer.";
 import { HeartOutlined, RocketOutlined, TeamOutlined } from "@ant-design/icons";
-import { Card, Col, Row, theme, Typography } from "antd";
+import { Card, theme, Typography } from "antd";
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 const OurMission = () => {
   const { token } = theme.useToken();

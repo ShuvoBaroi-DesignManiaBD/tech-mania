@@ -1,8 +1,6 @@
-import CoreValues from "@/components/pages/about/CoreValues";
 import Hero from "@/components/pages/shared/Hero";
 import MeetTheTeam from "@/components/pages/about/MeetTheTeam";
 import OurMission from "@/components/pages/about/OurMission";
-import OurStory from "@/components/pages/about/OurStory";
 
 export default function Page() {
   // const dispatch = useAppDispatch();

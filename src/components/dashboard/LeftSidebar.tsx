@@ -2,8 +2,16 @@
 import { Avatar, Menu, theme, Typography } from "antd";
 import Sider from "antd/es/layout/Sider";
 import Title from "antd/es/typography/Title";
-import dashboardNavItems from "../ui/shared/navbar/dashboardNav/dashboardNavItems";
+import dashboardNavItems from "../ui/shared/navbar/dashboardNav/dashboardLeftSideNavItems";
 
+/**
+ * A LeftSidebar component for the dashboard layout.
+ *
+ * This component will render a fixed left sidebar with a navigation menu and
+ * a user profile card at the bottom.
+ *
+ * @returns A React component for the left sidebar of the dashboard layout.
+ */
 const LeftSidebar = () => {
   const { token } = theme.useToken();
   return (

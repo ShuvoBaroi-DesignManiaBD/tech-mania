@@ -2,7 +2,6 @@
 
 import CustomLink from "@/components/ui/CustomLink";
 import { HomeOutlined, SettingOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
-import { MenuItemType } from "antd/es/menu/interface";
 import { ReactNode } from "react";
 
 type TChildItem = {
@@ -11,11 +10,11 @@ type TChildItem = {
   type?: string;
   icon?: ReactNode;
 };
-type TItem = MenuItemType & {
-  children?: TChildItem[];
-};
+// type TItem = MenuItemType & {
+//   children?: TChildItem[];
+// };
 
-const dashboardNavItems: any = [
+const dashboardNavItems: TChildItem[] = [
   {
     key: "dashboard",
     label: <CustomLink href="/dashboard">Dashboard</CustomLink>,
