@@ -54,3 +54,22 @@ export type TCustomTheme = {
   token: Partial<GlobalToken> & TCustomTokens;
   components: { Layout: { headerBg: string; footerBg: string } };
 } ;
+
+
+export type TMeta = {
+  limit: number;
+  page: number;
+  total: number;
+  totalPage: number;
+};
+
+export type TResponse<T> = {
+  statusCode: number;
+  success: boolean;
+  message?: string;
+  totalPosts?: number;
+  totalUsers?: number;
+  totalComments?: number;
+  data: T;
+  token?: string;
+};

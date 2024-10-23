@@ -17,7 +17,7 @@ import {
 import { formatDistanceToNow } from "date-fns"; // To format date
 import { IPostCard } from "@/types/post.type";
 import Image from "next/image";
-import CommentSection from "../dashboard/contentArea/CommentSection";
+import CommentSection from "../../dashboard/contentArea/CommentSection";
 
 const { Text, Paragraph } = Typography;
 

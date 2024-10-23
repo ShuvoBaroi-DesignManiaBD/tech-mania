@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fontClasses}`} style={{maxWidth:'100vw'}}>
+    <html suppressHydrationWarning lang="en" className={`${fontClasses}`} style={{maxWidth:'100vw'}}>
     <body>
       <ReduxProvider>
         <AntThemeProvider>{children}</AntThemeProvider>

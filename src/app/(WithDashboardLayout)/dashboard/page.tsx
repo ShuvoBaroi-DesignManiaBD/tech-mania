@@ -7,24 +7,58 @@ import { IPostCard } from "@/types/post.type";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 
 // Dynamically import Ant Design components from 'antd'
-const Input = dynamic(() => import("antd").then((mod) => mod.Input), { ssr: false });
-const Dropdown = dynamic(() => import("antd").then((mod) => mod.Dropdown), { ssr: false });
-const Menu = dynamic(() => import("antd").then((mod) => mod.Menu), { ssr: false });
-const MenuItem = dynamic(() => import("antd").then((mod) => mod.Menu.Item), { ssr: false });
-const Space = dynamic(() => import("antd").then((mod) => mod.Space), { ssr: false });
-const Button = dynamic(() => import("antd").then((mod) => mod.Button), { ssr: false });
-const List = dynamic(() => import("antd").then((mod) => mod.List), { ssr: false });
-const ListItem = dynamic(() => import("antd").then((mod) => mod.List.Item), { ssr: false });
+const Input = dynamic(() => import("antd").then((mod) => mod.Input), {
+  ssr: false,
+});
+const Dropdown = dynamic(() => import("antd").then((mod) => mod.Dropdown), {
+  ssr: false,
+});
+const Menu = dynamic(() => import("antd").then((mod) => mod.Menu), {
+  ssr: false,
+});
+const MenuItem = dynamic(() => import("antd").then((mod) => mod.Menu.Item), {
+  ssr: false,
+});
+const Space = dynamic(() => import("antd").then((mod) => mod.Space), {
+  ssr: false,
+});
+const Button = dynamic(() => import("antd").then((mod) => mod.Button), {
+  ssr: false,
+});
+const List = dynamic(() => import("antd").then((mod) => mod.List), {
+  ssr: false,
+});
+const ListItem = dynamic(() => import("antd").then((mod) => mod.List.Item), {
+  ssr: false,
+});
 // const Typography = dynamic(() => import("antd").then((mod) => mod.Typography), { ssr: false });
-const Text = dynamic(() => import("antd").then((mod) => mod.Typography.Text), { ssr: false });
-const SearchOutlined = dynamic(() => import("@ant-design/icons/SearchOutlined"), { ssr: false });
-const FilterOutlined = dynamic(() => import("@ant-design/icons/FilterOutlined"), { ssr: false });
-const DownOutlined = dynamic(() => import("@ant-design/icons/DownOutlined"), { ssr: false });
+const Text = dynamic(() => import("antd").then((mod) => mod.Typography.Text), {
+  ssr: false,
+});
+const SearchOutlined = dynamic(
+  () => import("@ant-design/icons/SearchOutlined"),
+  { ssr: false }
+);
+const FilterOutlined = dynamic(
+  () => import("@ant-design/icons/FilterOutlined"),
+  { ssr: false }
+);
+const DownOutlined = dynamic(() => import("@ant-design/icons/DownOutlined"), {
+  ssr: false,
+});
 
 // Dynamic import of other components
-const PostCard = dynamic(() => import("@/components/cards/PostCard"), { ssr: false });
-const PostCreate = dynamic(() => import("@/components/dashboard/contentArea/PostCreate"), { ssr: false });
-const DynamicInfiniteScroll = dynamic(() => import("react-infinite-scroll-component"), { ssr: false });
+const PostCard = dynamic(() => import("@/components/ui/cards/PostCard"), {
+  ssr: false,
+});
+const PostCreate = dynamic(
+  () => import("@/components/dashboard/contentArea/PostCreate"),
+  { ssr: false }
+);
+const DynamicInfiniteScroll = dynamic(
+  () => import("react-infinite-scroll-component"),
+  { ssr: false }
+);
 
 const categories = ["Tutorials", "Guides", "Tips", "Tech News"];
 
@@ -90,8 +124,8 @@ const Page = () => {
           placeholder="Search for tips, guides, or tutorials..."
           prefix={<SearchOutlined />}
           className="max-w-sm"
-          style={{color: TokenProvider().colorText}}
-          styles={{input: {color: TokenProvider().colorText}, }}
+          style={{ color: TokenProvider().colorText }}
+          styles={{ input: { color: TokenProvider().colorText } }}
           onChange={(e) => handleSearch(e.target.value)}
         />
 
@@ -112,7 +146,10 @@ const Page = () => {
 
       {/* Only render the infinite scroll when on the client */}
       {isClient && (
-        <div id="scrollableDiv" className="overflow-y-scroll scrollbar-hide pb-20">
+        <div
+          id="scrollableDiv"
+          className="overflow-y-scroll scrollbar-hide pb-20"
+        >
           <DynamicInfiniteScroll
             dataLength={posts.length}
             next={loadMorePosts}
@@ -124,22 +161,23 @@ const Page = () => {
               dataSource={posts}
               renderItem={(item: unknown) => {
                 const post = item as IPostCard;
-                return(
-                <ListItem className="!border-0">
-                  <PostCard
-                    key={post?.id}
-                    id={post.id}
-                    currentUserId={post.currentUserId}
-                    author={post.author}
-                    content={post.content}
-                    upVotes={post.upVotes}
-                    downVotes={post.downVotes}
-                    commentsCount={post.commentsCount}
-                    comments={post.comments}
-                    createdAt={post.createdAt}
-                  />
-                </ListItem>
-              )}}
+                return (
+                  <ListItem className="!border-0">
+                    <PostCard
+                      key={post?.id}
+                      id={post.id}
+                      currentUserId={post.currentUserId}
+                      author={post.author}
+                      content={post.content}
+                      upVotes={post.upVotes}
+                      downVotes={post.downVotes}
+                      commentsCount={post.commentsCount}
+                      comments={post.comments}
+                      createdAt={post.createdAt}
+                    />
+                  </ListItem>
+                );
+              }}
             />
           </DynamicInfiniteScroll>
         </div>

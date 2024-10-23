@@ -6,6 +6,8 @@ import { ReactNode } from "react";
 
 type TButton = {
   type?: BaseButtonProps["type"];
+  color?: BaseButtonProps["color"];
+  htmlType?: "submit" | "reset" | "button";
   icon?: ReactNode,
   size?: BaseButtonProps["size"];
   href?: string;
@@ -13,23 +15,27 @@ type TButton = {
   onClick?: () => void;
   className?: string;
   style?: React.CSSProperties;
+  shape?: BaseButtonProps["shape"];
 };
 
 const Button = ({
   type = "default",
+  htmlType = "button",
   size = "middle",
   href,
   icon=null,
   children,
   onClick,
   className = '',
-  style = {}
+  style = {},
+  shape = "default",
+  color='default',
 }: TButton) => {
   // If `href` is provided, render the button with a `Link` wrapper
   if (href) {
     return (
       <Link href={href} legacyBehavior>
-        <AntButton type={type} size={size} className={className} style={style} icon={icon}>
+        <AntButton type={type} size={size} className={className} style={style} icon={icon} htmlType={htmlType} shape={shape} color={color}>
           {children}
         </AntButton>
       </Link>
@@ -37,7 +43,7 @@ const Button = ({
   }
 
   return (
-    <AntButton type={type} size={size} onClick={onClick} className={className} style={style} icon={icon}>
+    <AntButton type={type} size={size} onClick={onClick} className={className} style={style} icon={icon} htmlType={htmlType} color={color}>
       {children}
     </AntButton>
   );

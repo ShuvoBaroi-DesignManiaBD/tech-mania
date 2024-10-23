@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Dropdown, Layout, Menu, Space, theme } from "antd";
+import { Avatar, Button as AntButton, Dropdown, Layout, Menu, Space, theme } from "antd";
 import {
   AlignRightOutlined,
+  LogoutOutlined,
   MoonOutlined,
   SunOutlined,
   UserOutlined,
@@ -22,8 +23,10 @@ import CustomLink from "../ui/CustomLink";
 import Logo from "../ui/Logo";
 import OffCanvas from "../ui/shared/navbar/mobileNav/OffCanvas";
 import { usePathname } from "next/navigation";
-import dashboardTopNavItems from "../ui/shared/navbar/dashboardNav/dashboardTopNavItems copy";
+import dashboardTopNavItems from "../ui/shared/navbar/dashboardNav/dashboardTopNavItems";
 import TopLoadingBar from "../ui/shared/TopLoadingBar";
+import { logout } from "@/redux/features/auth/authSlice";
+import Button from "../ui/button/Button";
 
 const { Header: HeaderPart } = Layout;
 
@@ -73,6 +76,10 @@ const Header = ({ className = "" }: { className?: string }) => {
       key: "contact",
       label: <CustomLink href="/contact">Contact Us</CustomLink>, // Full text label
     },
+    {
+      key: "logout",
+      label: <Button  color="danger" onClick={()=>dispatch(logout())} className="w-full !bg-red-500 border-0 hover:border-0 hover:!text-white" icon={<LogoutOutlined/>}>Logout</Button>, // Full text label
+    },
   ];
 
   const { token } = theme.useToken();
@@ -117,7 +124,7 @@ const Header = ({ className = "" }: { className?: string }) => {
     <>
       <TopLoadingBar></TopLoadingBar>
       <HeaderPart
-        className={`${className} flex justify-between w-full sticky top-0 z-50 border-b shadow-sm`}
+        className={`${className} flex justify-between w-full sticky top-0 z-50 border-b shadow-sm !px-8`}
         style={{ borderColor: token?.colorBorder }}
       >
         <Space
@@ -126,7 +133,7 @@ const Header = ({ className = "" }: { className?: string }) => {
           className="w-full flex justify-between items-center"
         >
           {/* Logo Section */}
-          <Logo />
+          <Logo width={180} height={40}/>
 
           {/* Main Navigation for Desktop */}
           {!isMobile && (
@@ -147,7 +154,7 @@ const Header = ({ className = "" }: { className?: string }) => {
           {/* Action Buttons (Theme, User Profile, Off-Canvas) */}
           <div className="flex items-center justify-end gap-5 flex-grow">
             {/* Theme Toggle Button */}
-            <Button
+            <AntButton
               size="small"
               type="default"
               shape="circle"
@@ -157,7 +164,7 @@ const Header = ({ className = "" }: { className?: string }) => {
 
             {/* User Profile Section */}
             {isMobile ? (
-              <Button
+              <AntButton
                 size="small"
                 type="default"
                 shape="circle"
@@ -170,7 +177,7 @@ const Header = ({ className = "" }: { className?: string }) => {
 
             {/* Off-Canvas Button for Mobile Navigation */}
             {isMobile && (
-              <Button
+              <AntButton
                 size="small"
                 type="default"
                 shape="circle"

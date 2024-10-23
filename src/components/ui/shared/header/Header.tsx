@@ -1,5 +1,5 @@
 "use client";
-import { Button, Layout, Menu, Space } from "antd";
+import { Layout, Menu, Space } from "antd";
 import Logo from "../../Logo";
 import {
   AlignRightOutlined,
@@ -22,6 +22,7 @@ import MainNavItems from "../navbar/mainNav/MainNavItems";
 import OffCanvas from "../navbar/mobileNav/OffCanvas";
 import { setOffCanvasState } from "@/redux/features/ui/offCanvas/offCanvasSlice";
 import TopLoadingBar from "../TopLoadingBar";
+import Button from "../../button/Button";
 const { Header: HeaderPart } = Layout;
 
 const Header = () => {
@@ -114,7 +115,7 @@ const Header = () => {
               onClick={() => dispatch(setTheme(undefined))}
             />
           ) : (
-            <Button type="primary" size="middle" className="!text-sm">
+            <Button href="/login" type="primary" size="middle" className="!text-sm">
               Login/register
             </Button>
           )}
