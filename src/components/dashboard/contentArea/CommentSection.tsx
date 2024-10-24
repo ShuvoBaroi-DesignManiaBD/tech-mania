@@ -1,12 +1,23 @@
-import React from 'react';
-import CommentItem from './CommentItem';
+import React from "react";
+import CommentItem from "./CommentItem";
 
-const CommentSection = ({comments}:{comments:{author:{ id: string; image: string; name: string | null }, comment:string, upVotes:number, downVotes:number, repliesCount:number, replies:{
-  author: { id: string; image: string; name: string | null };
-  reply: string;
-}[]}[]}) => {
-    return (
-      <div className='overflow-hidden'>
+const CommentSection = ({
+  comments,
+}: {
+  comments: {
+    author: { id: string; image: string; name: string | null };
+    comment: string;
+    upVotes: number;
+    downVotes: number;
+    repliesCount: number;
+    replies: {
+      author: { id: string; image: string; name: string | null };
+      reply: string;
+    }[];
+  }[];
+}) => {
+  return (
+    <div className="overflow-hidden">
       {comments.map((comment, index) => (
         <CommentItem
           key={index}
@@ -19,7 +30,7 @@ const CommentSection = ({comments}:{comments:{author:{ id: string; image: string
         />
       ))}
     </div>
-    );
+  );
 };
 
 export default CommentSection;

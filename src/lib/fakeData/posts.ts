@@ -4,7 +4,6 @@ import { IPostCard } from "@/types/post.type";
 export const postsData: IPostCard[] = [
     {
       id: "1",
-      currentUserId: "u123",
       author: {
         name: "John Doe",
         image: "https://randomuser.me/api/portraits/men/10.jpg",
@@ -80,7 +79,6 @@ export const postsData: IPostCard[] = [
     },
     {
       id: "2",
-      currentUserId: "u123",
       author: {
         name: "Sarah Connor",
         image: "https://randomuser.me/api/portraits/women/12.jpg",
@@ -128,7 +126,6 @@ export const postsData: IPostCard[] = [
     },
     {
       id: "3",
-      currentUserId: "u123",
       author: {
         name: "Michael Scott",
         image: "https://randomuser.me/api/portraits/men/22.jpg",
@@ -146,7 +143,6 @@ export const postsData: IPostCard[] = [
     },
     {
       id: "4",
-      currentUserId: "u123",
       author: {
         name: "Anna Taylor",
         image: "https://randomuser.me/api/portraits/women/18.jpg",

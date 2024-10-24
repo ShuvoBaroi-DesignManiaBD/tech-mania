@@ -5,6 +5,7 @@ import themeSlice from "./features/theme/themeSlice";
 import deviceSlice from "./features/device/deviceSlice";
 import offCanvasSlice from "./features/ui/offCanvas/offCanvasSlice";
 import authSlice from "./features/auth/authSlice";
+import postsSlice from "./features/posts/postSlice";
 import { persistStore,
   persistReducer,
   FLUSH,
@@ -29,6 +30,7 @@ export const store = configureStore({
     device: deviceSlice,
     offCanvas: offCanvasSlice,
     auth: persistedAuthReducer,
+    posts: postsSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

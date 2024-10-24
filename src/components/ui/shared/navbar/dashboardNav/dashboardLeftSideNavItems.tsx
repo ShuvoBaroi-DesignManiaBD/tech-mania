@@ -1,8 +1,10 @@
 // import { menuItem } from "@/types/menu.type";
 
 import CustomLink from "@/components/ui/CustomLink";
-import { HomeOutlined, SettingOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
+import {  HomeOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { ReactNode } from "react";
+import { BiSupport } from "react-icons/bi";
+import { FaHandHoldingDollar } from "react-icons/fa6";
 
 type TChildItem = {
   key?: string;
@@ -32,8 +34,9 @@ const dashboardNavItems: TChildItem[] = [
   },
   { type: "divider" },
   { type: "group" },
-  { key: "4", icon: <SettingOutlined />, label: "About Us" },
-  { key: "5", icon: <SettingOutlined />, label: "Support" },
+  { key: "4", icon: <FaHandHoldingDollar />, label: <CustomLink href="pricing">Pricing</CustomLink> },
+  { key: "5", icon: <TeamOutlined />, label: "About Us" },
+  { key: "6", icon: <BiSupport />, label: "Support" },
 ];
 
 export default dashboardNavItems;
