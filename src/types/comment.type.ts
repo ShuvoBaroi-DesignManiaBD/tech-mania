@@ -1,3 +1,5 @@
+import { IAuthor } from "./post.type";
+
 export interface IComment {
     _id: string;
     postId: string;
@@ -39,3 +41,20 @@ export interface IComment {
     isDeleted?: boolean;
     replies?: string[];
   }
+
+  export type TComment = {
+    _id?: string;
+    postId: string;
+    author: IAuthor;
+    content: string;
+    upvotes: number | string[];
+    downvotes: number;
+    upvoteCount: number;
+    downvoteCount: number;
+    repliesCount: number;
+    replies: {
+      author: { id: string; image: string; name: string | null };
+      content: string;
+    }[];
+  };
+

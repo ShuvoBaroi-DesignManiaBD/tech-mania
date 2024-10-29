@@ -64,7 +64,7 @@ const TopLoadingBar = () => {
           percent={progress}
           showInfo={false}
           status="active"
-          strokeWidth={3}
+          // strokeWidth={3}
           strokeColor="#85b3ff"
           size={["100%", 10]}
           className="!h-10"

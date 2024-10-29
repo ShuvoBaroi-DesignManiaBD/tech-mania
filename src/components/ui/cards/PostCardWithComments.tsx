@@ -15,28 +15,94 @@ import {
   UserOutlined,
   CommentOutlined,
   PlayCircleOutlined,
+  LeftOutlined,
+  RightOutlined,
+  LikeFilled,
+  DislikeFilled,
 } from "@ant-design/icons";
 import { formatDistanceToNow } from "date-fns"; // To format date
-import { IPost } from "@/types/post.type";
+import { IAuthor, IPost, TPostInteractions } from "@/types/post.type";
 import Image from "next/image";
 import ReactPlayer from "react-player";
 import { useState } from "react";
+import CommentSection from "@/components/dashboard/contentArea/CommentSection";
+import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
+import { useAddDownvoteMutation, useAddUpvoteMutation } from "@/redux/features/vote/voteApi";
+import { useGetAPostInteractionsQuery } from "@/redux/features/posts/postApi";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { voteType } from "@/constant";
+import { TVoteType } from "@/types/vote.type";
 // import CommentSection from "../../dashboard/contentArea/CommentSection";
 
 const { Text, Paragraph } = Typography;
 
 // PostCard Component to display a post and its comments
-const PostCardWithComments = (
-  {
-    post,
-    // isOpen,
-    setIsOpen,
-  }: {
-    post: Partial<IPost>;
-    isOpen: boolean;
-    setIsOpen: CallableFunction;
-  }) => {
-    const [playerError, setPlayerError] = useState(false);
+const PostCardWithComments = ({
+  post,
+  // isOpen,
+  setIsOpen,
+}: {
+  post: Partial<IPost>;
+  isOpen: boolean;
+  setIsOpen: CallableFunction;
+}) => {
+  const currentUser = useAppSelector(selectCurrentUser);
+  const [playerError, setPlayerError] = useState(false);
+  const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
+  const [addUpvote] = useAddUpvoteMutation();
+  const [addDownvote] = useAddDownvoteMutation();
+  const { data:interactions } = useGetAPostInteractionsQuery(post?._id as string);
+  console.log(post?._id);
+  const postInteractions = interactions?.data || [];
+
+  const handleUpvoteForPost = () => {
+    if (!currentUser) {
+      return;
+    }
+    addUpvote({
+      userId: currentUser._id,
+      parentId: post._id,
+      type: voteType.upvote as TVoteType,
+      parentType: 'Post',
+    });
+  };
+
+  const handleUpvoteForComment = () => {
+    if (!currentUser) {
+      return;
+    }
+    addUpvote({
+      userId: currentUser._id,
+      parentId: post._id,
+      type: voteType.upvote as TVoteType,
+      parentType: 'Comment',
+    });
+  };
+
+  const handleDownvoteForPost = () => {
+    if (!currentUser) {
+      return;
+    }
+    addDownvote({
+      userId: currentUser._id,
+      parentId: post._id,
+      type: voteType.downvote as TVoteType,
+      parentType: 'Post'
+    });
+  };
+
+  const handleDownvoteForComment = () => {
+    if (!currentUser) {
+      return;
+    }
+    addDownvote({
+      userId: currentUser._id,
+      parentId: post._id,
+      type: voteType.downvote as TVoteType,
+      parentType: 'Comment'
+    });
+  };
 
   const handleVideoError = () => {
     setPlayerError(true);
@@ -45,145 +111,254 @@ const PostCardWithComments = (
   const hideModal = () => {
     setIsOpen(false);
   };
+
+  const handleMediaSelect = (index: number) => {
+    setSelectedMediaIndex(index);
+  };
+
+  const handleNext = () => {
+    if (selectedMediaIndex < mediaArray.length - 1) {
+      setSelectedMediaIndex((prev) => prev + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (selectedMediaIndex > 0) {
+      setSelectedMediaIndex((prev) => prev - 1);
+    }
+  };
+
+  // Helper function to extract the video ID from the YouTube URL
+  const getYoutubeVideoId = (url: string) => {
+    const regExp =
+      /^.*(youtu\.be\/|v\/|\/u\/\w\/|embed\/|watch\?v=|&v=|youtu\.be\/)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
+  // Create an array combining video and images for the slider
+  const mediaArray = [
+    ...(post?.video ? [post?.video] : []),
+    ...(post?.images ? post?.images : []),
+  ];
   const { token } = theme.useToken();
-  function getYoutubeVideoId(video: string) {
-    throw new Error("Function not implemented.");
-  }
+  // function getYoutubeVideoId(video: string) {
+  //   throw new Error("Function not implemented.");
+  // }
 
   return (
     <Modal
       open={true}
       onClose={hideModal}
       onCancel={hideModal}
-      width={800}
+      width="75vw"
       footer={null}
       centered
       style={{ backgroundColor: token?.colorBgContainer, borderRadius: "16px" }}
     >
-      <div className="w-full m-1 shadow-sm rounded-lg h-[85vh] overflow-y-scroll scrollbar-hide">
+      <div className="flex gap-6 items-stretch justify-stretch w-full m-1 shadow-sm rounded-lg h-[90vh] overflow-y-scroll scrollbar-hide ">
+        <div className="w-6/12 overflow-y-scroll scrollbar-hide">
+
         {/* Post Header */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
+          <div className="flex gap-2 items-center">
             <Avatar
-              src={post?.author?.profilePicture}
-              icon={!post?.author?.profilePicture && <UserOutlined />}
+              src={post.author && (post.author as IAuthor).profilePicture}
+              icon={
+                !(post.author as IAuthor).profilePicture && <UserOutlined />
+              }
               size={48}
               className="mr-3"
             />
             <div>
               <Text strong className="block leading-[16px]">
-                {post?.author?.name}
+                {(post.author as IAuthor).name}
               </Text>
-              <Text className="text-xs">
-                {formatDistanceToNow(new Date( post?.createdAt as string), { addSuffix: true })}
+              <Text className="!text-sm">
+                {formatDistanceToNow(new Date(post?.createdAt as string), {
+                  addSuffix: true,
+                })}
               </Text>
             </div>
           </div>
           {/* Post Actions - Upvotes / Downvotes */}
         </div>
 
-        {/* Post Content */}
-        <Paragraph>{post?.content}</Paragraph>
-        <div className="flex flex-wrap gap-4">
-        {/* Video Player */}
-        {!playerError && post?.video && (
-          <ReactPlayer
-            url={post?.video}
-            width="100%"
-            height="55vh"
-            controls={true}
-            onError={handleVideoError}
-            className="!rounded-lg"
-            style={{borderRadius: '12px !important'}}
-          />
-        )}
+        {/* Post Media Slider */}
+        <div className="relative w-full">
+          {/* Main Image/Video Display */}
+          <div className="w-full h-[45vh] flex justify-center items-center relative">
+            <div className="absolute w-full flex justify-between">
+              {/* Left Navigation */}
+              {selectedMediaIndex > 0 && (
+                <Button
+                  className="absolute left-0 !py-8 transform z-10 bg-white"
+                  icon={<LeftOutlined />}
+                  onClick={handlePrev}
+                />
+              )}
 
-        {/* Fallback for Unavailable YouTube Video */}
-        {playerError && post?.video && (
-          <div
-            className="relative w-full cursor-pointer"
-            onClick={() => window.open(post?.video, "_blank")}
+              {/* Right Navigation */}
+              {selectedMediaIndex < mediaArray.length - 1 && (
+                <Button
+                  className="absolute !py-8 !right-0 transform z-10 bg-white"
+                  icon={<RightOutlined />}
+                  onClick={handleNext}
+                />
+              )}
+            </div>
+            {mediaArray[selectedMediaIndex].includes("youtube.com") ||
+            mediaArray[selectedMediaIndex].includes("youtu.be") ? (
+              !playerError ? (
+                <ReactPlayer
+                  url={mediaArray[selectedMediaIndex]}
+                  width="100%"
+                  height="100%"
+                  controls={true}
+                  onError={handleVideoError}
+                  className="!rounded-lg"
+                />
+              ) : (
+                <div
+                  className="relative w-full cursor-pointer"
+                  onClick={() =>
+                    window.open(mediaArray[selectedMediaIndex], "_blank")
+                  }
+                >
+                  <Image
+                    src={`https://img.youtube.com/vi/${getYoutubeVideoId(
+                      mediaArray[selectedMediaIndex]
+                    )}/hqdefault.jpg`}
+                    width={1000}
+                    height={400}
+                    objectFit="cover"
+                    alt="Video Thumbnail"
+                    className="w-full max-h-[45vh] object-cover rounded-lg"
+                  />
+                  <PlayCircleOutlined
+                    className="absolute text-white"
+                    style={{
+                      fontSize: "64px",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  />
+                </div>
+              )
+            ) : (
+              <Image
+                src={mediaArray[selectedMediaIndex]}
+                width={1000}
+                height={400}
+                alt="Post content"
+                className="w-full h-[45vh] object-cover rounded-lg"
+              />
+            )}
+          </div>
+
+          {/* Thumbnails Navigation */}
+          <div className="flex justify-center gap-2 mt-3">
+            {mediaArray.map((media, index) => (
+              <div
+                key={index}
+                className={`w-24 h-16 border-2 cursor-pointer ${
+                  index === selectedMediaIndex
+                    ? "border-primary"
+                    : "border-transparent"
+                }`}
+                onClick={() => handleMediaSelect(index)}
+              >
+                {media.includes("youtube.com") || media.includes("youtu.be") ? (
+                  <Image
+                    src={`https://img.youtube.com/vi/${getYoutubeVideoId(
+                      media
+                    )}/default.jpg`}
+                    width={100}
+                    height={70}
+                    alt="Video Thumbnail"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                ) : (
+                  <Image
+                    src={media}
+                    width={100}
+                    height={70}
+                    alt="Post content"
+                    className="object-cover rounded-lg h-[70px] w-auto"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Post Actions */}
+      <div className="flex items-center space-x-2 pt-4">
+        <Tooltip title="Upvote">
+          <Button
+            type="text"
+            icon={<LikeFilled />}
+            size="small"
           >
-            {/* Thumbnail Image (You can adjust the width/height as needed) */}
-            <Image
-              src={`https://img.youtube.com/vi/${getYoutubeVideoId(
-                post?.video
-              )}/hqdefault.jpg` || (post?.images![0] )}
-              width={1000}
-              height={400}
-              // layout="fill"
-              objectFit="cover"
-              alt="Video Thumbnail"
-              className={`rouded-lg w-full h-[55vh] object-cover mb-3 rounded-lg`}
-            />
+            { (postInteractions as TPostInteractions).upvotes || 0}
+          </Button>
+        </Tooltip>
 
-            {/* Play Button (Centered on the thumbnail) */}
-            <PlayCircleOutlined
-              className="absolute text-white"
-              style={{
-                fontSize: "64px",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
-          </div>
-        )}
+        <Tooltip title="Downvote">
+          <Button type="text" icon={<DislikeFilled />} size="small" >
+          { (postInteractions as TPostInteractions).downvotes || 0}
+          </Button>
+        </Tooltip>
 
-        {/* Images */}
-        {post?.images?.map((image, index) => (
-          <Image
-            key={image}
-            src={image}
-            width={1000}
-            height={350}
-            alt="Post content"
-            className={`${
-              index === 0 && !post?.video
-                ? "w-full h-[50vh]"
-                : "w-auto h-[8vh]"
-            } object-cover mb-3 rounded-lg`}
-          />
-        ))}
+        <Tooltip title="Comments">
+          <Button type="text" icon={<CommentOutlined />} size="small">
+            { (postInteractions as TPostInteractions).comments || 0}
+          </Button>
+        </Tooltip>
       </div>
-        <div className="flex items-center space-x-2 pt-4">
-          <Tooltip title="Upvote">
-            <Button type="text" icon={<LikeOutlined />} size="small">
-              {post?.upvotes?.length}
-            </Button>
-          </Tooltip>
-          <Tooltip title="Downvote">
-            <Button type="text" icon={<DislikeOutlined />} size="small">
-              {post?.downvotes?.length}
-            </Button>
-          </Tooltip>
-          {/* Comment Count */}
-          <Tooltip title="Comments">
-            <Button type="text" icon={<CommentOutlined />} size="small">
-              {post?.numberOfComments}
-            </Button>
-          </Tooltip>
-        </div>
-        <div>
-          <Divider className="my-4"></Divider>
-          <div className="flex justify-evenly items-center">
-            <Typography.Text className="flex items-center font-medium">
-              <LikeOutlined className="[&&_svg]:size-6 mr-2" /> Upvote
-            </Typography.Text>
-            <Typography.Text className="flex items-center font-medium">
-              <DislikeOutlined className="[&&_svg]:size-6 mr-2" /> Downvote
-            </Typography.Text>
-            <Typography.Text className="flex items-center font-medium">
-              <CommentOutlined className="[&&_svg]:size-6 mr-2" />
-              Comment
-            </Typography.Text>
-          </div>
-        </div>
-        {/* Divider for Comments */}
-        {(post?.comments as string[]).length > 0 && <Divider className="my-3" />}
+
+      <Divider className="my-4" />
+
+      <div className="flex justify-evenly items-center">
+        <Typography.Text className="flex items-center font-medium cursor-pointer" onClick={handleUpvoteForPost}>
+          <LikeOutlined className="[&&_svg]:size-6 mr-2" /> Upvote
+        </Typography.Text>
+        <Typography.Text className="flex items-center font-medium cursor-pointer" onClick={handleDownvoteForPost}>
+          <DislikeOutlined className="[&&_svg]:size-6 mr-2" /> Downvote
+        </Typography.Text>
+        <Typography.Text
+          className="flex items-center font-medium cursor-pointer"
+          onClick={() => setIsOpen(true)}
+        >
+          <CommentOutlined className="[&&_svg]:size-6 mr-2" />
+          Comment
+        </Typography.Text>
+      </div>
+       
 
         {/* Comments Section */}
-        {/* <CommentSection comments={comments}></CommentSection> */}
+        <CommentSection postId={post?._id as string}></CommentSection>
+        </div>
+        {/* Post Content */}
+        <Typography className="flex flex-col w-6/12 gap-2 p-7 rounded-lg overflow-y-hidden scrollbar-hide" style={{backgroundColor: TokenProvider()?.secondaryBorder}}>
+        <Typography.Title level={2} className="mb-4">
+          {post?.title}
+        </Typography.Title>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: post?.content || "No content available",
+            }}
+            className=""
+          />
+          {/* <Button
+            onClick={() => setIsOpen(true)}
+            className="mt-4 underline !p-0 !text-light-primaryTextHover"
+            type="link"
+          >
+            Read more
+          </Button> */}
+        </Typography>
       </div>
     </Modal>
   );

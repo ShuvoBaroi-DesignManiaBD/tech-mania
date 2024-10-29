@@ -1,18 +1,43 @@
 import { baseAPI } from "@/redux/api/baseApi";
-import { IPost, TResponse } from "@/types";
+import { IComment, IPost, TComment, TResponse } from "@/types";
 
 const commentApi = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
-    getAllCommentsOfAPost: builder.query<TResponse<IPost[]>, { page?: number; limit?: number }>({
-      query: ({ page = 1, limit = 6 }) => ({
-        url: `/comments/post?id=${page}&limit=${limit}`,
+    getAllCommentsOfAPost: builder.query<
+      TResponse<TComment[]>,
+      { postId: string; page?: number; limit?: number }
+    >({
+      query: ({ postId, page = 1, limit = 6 }) => ({
+        url: `/comments/post/${postId}?page=${page}&limit=${limit}`,
         method: "GET",
       }),
       // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
       //   try {
       //     const { data } = await queryFulfilled; // Wait for the query to fulfill
       //     console.log("Data:", data);
-          
+
+      //     // Directly dispatch the data to Redux store
+      //     dispatch(setPosts(data?.data)); // Assuming the API returns the array directly (not inside a `data` object)
+      //   } catch (error) {
+      //     console.error("Error fetching posts:", error);
+      //   }
+      // },
+      providesTags: ["comments"],
+    }),
+
+    getAllRepliesOfAComment: builder.query<
+      TResponse<TComment[]>,
+      { parentCommentId: string; page?: number; limit?: number }
+    >({
+      query: ({ parentCommentId, page = 1, limit = 6 }) => ({
+        url: `comments/comment-replies/${parentCommentId}?page=${page}&limit=${limit}`,
+        method: "GET",
+      }),
+      // onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
+      //   try {
+      //     const { data } = await queryFulfilled; // Wait for the query to fulfill
+      //     console.log("Data:", data);
+
       //     // Directly dispatch the data to Redux store
       //     dispatch(setPosts(data?.data)); // Assuming the API returns the array directly (not inside a `data` object)
       //   } catch (error) {
@@ -29,41 +54,42 @@ const commentApi = baseAPI.injectEndpoints({
       }),
     }),
 
-    updateAPost: builder.mutation<
+    updateAComment: builder.mutation<
       void,
-      { postId: string; updatedPost: Partial<IPost> }
+      { commentId: string; updatedComment: Partial<IComment> }
     >({
-      query: ({ postId, updatedPost }) => ({
-        url: `posts/update-post?postId=${postId}`,
+      query: ({ commentId, updatedComment }) => ({
+        url: `comments/comment/id=${commentId}`,
         method: "PATCH",
-        body: updatedPost,
+        body: updatedComment,
       }),
-      invalidatesTags: ["posts"], // This invalidates the cache of posts to refetch them after the update
+      invalidatesTags: ["comments"], // This invalidates the cache of posts to refetch them after the update
     }),
 
-    deleteAPost: builder.mutation<void, string>({
+    deleteAComment: builder.mutation<void, string>({
       query: (id) => ({
-        url: `posts/${id}`,
+        url: `comments/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["posts"],
+      invalidatesTags: ["comments"],
     }),
 
-    addAPost: builder.mutation<void, { data: Partial<IPost> }>({
-      query: ({ data }) => ({
-        url: `posts/create-post`,
+    addAComment: builder.mutation<void, Partial<IComment>>({
+      query: ( data ) => ({
+        url: `comments/create-comment`,
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["posts"],
+      invalidatesTags: ["comments", "postInteractions"],
     }),
   }),
 });
 
 export const {
   useGetAllCommentsOfAPostQuery,
+  useGetAllRepliesOfACommentQuery,
   useGetACommentQuery,
-  useUpdateAPostMutation,
-  useDeleteAPostMutation,
-  useAddAPostMutation,
+  useAddACommentMutation,
+  useDeleteACommentMutation,
+  useUpdateACommentMutation,
 } = commentApi;

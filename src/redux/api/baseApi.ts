@@ -75,6 +75,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, unknown, unknown> = asyn
 export const baseAPI = createApi({
   reducerPath: 'baseAPI',
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ['posts', 'comments', 'users'],
+  tagTypes: ['posts', 'comments', 'users', 'userPosts', 'votes', 'upvotes', 'downvotes', 'postVotes', 'postInteractions', 'commentVotes'],
   endpoints: () => ({}),
 });

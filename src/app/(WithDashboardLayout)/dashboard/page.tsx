@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"; // Ensure this is included for client-side rendering
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import debounce from "lodash/debounce";
 import dynamic from "next/dynamic";
 import { useGetAllPostsQuery } from "@/redux/features/posts/postApi";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 import { IPost } from "@/types/post.type";
-import { Spin } from "antd";
+import { DropdownProps, Spin } from "antd";
+import PostCardSkeleton from "@/components/ui/Skeletons/PostCardSkeleton";
 
 // Dynamic imports for Ant Design components
 const Input = dynamic(() => import("antd").then((mod) => mod.Input), {
@@ -56,7 +57,7 @@ const PostCreate = dynamic(
 const categories = ["Tutorials", "Guides", "Tips", "Tech News"];
 
 const Page = () => {
-  const [posts, setPosts] = useState<IPost[]>([]); // State to store posts
+  const [posts, setPosts] = useState<IPost[] | []>([]); // State to store posts
   const [page, setPage] = useState(1); // Current page
   const [loading, setLoading] = useState(false); // Loading state
   const [hasMore, setHasMore] = useState(true); // Track if more posts are available
@@ -66,14 +67,18 @@ const Page = () => {
   const observer = useRef<IntersectionObserver | null>(null); // Ref for IntersectionObserver
 
   // Fetch posts based on page and limit
-  const { data, isFetching } = useGetAllPostsQuery({ page, limit: 1 });
+  const { data, isFetching } = useGetAllPostsQuery({ page, limit: 3 });
 
   // Effect to append new posts to the state when data changes
   useEffect(() => {
     if (data) {
       setPosts((prevPosts) => [...prevPosts, ...data.data]); // Append posts
       setLoading(false); // Stop loading once data is fetched
-      if (data?.success === false || (posts.length > (data as any)?.totalPosts) || data.data.length <= (data as any)?.totalPosts) {
+      if (
+        data?.success === false ||
+        posts.length > (data as any)?.totalPosts ||
+        data.data.length <= (data as any)?.totalPosts
+      ) {
         setLoading(false); // Start loading more if more posts are available
         setHasMore(false); // Stop loading more if no new posts or less than limit
       }
@@ -82,23 +87,23 @@ const Page = () => {
 
   // Load more posts when the user scrolls to the bottom
   const loadMorePosts = () => {
-  if (hasMore && !isFetching) {
-    setLoading(true);
-    setPage((prevPage) => prevPage + 1); // Increment page to fetch more posts
-  }
-};
-
-useEffect(() => {
-  if (data) {
-    setPosts((prevPosts) => [...prevPosts, ...data.data]); // Append posts
-    setLoading(false); // Stop loading once data is fetched
-
-    // Determine if there are more posts to load
-    if (!data.success || data.data.length < 1) {
-      setHasMore(false); // Stop loading more if no new posts
+    if (hasMore && !isFetching) {
+      setLoading(true);
+      setPage((prevPage) => prevPage + 1); // Increment page to fetch more posts
     }
-  }
-}, [data]);
+  };
+
+  useEffect(() => {
+    if (data) {
+      setPosts((prevPosts) => [...prevPosts, ...data.data]); // Append posts
+      setLoading(false); // Stop loading once data is fetched
+
+      // Determine if there are more posts to load
+      if (!data.success || data.data.length < 1) {
+        setHasMore(false); // Stop loading more if no new posts
+      }
+    }
+  }, [data]);
 
   // IntersectionObserver to trigger loadMorePosts when last post is in view
   useEffect(() => {
@@ -169,7 +174,10 @@ useEffect(() => {
         />
 
         <Space>
-          <Dropdown overlay={filterMenu} trigger={["click"]}>
+          <Dropdown
+            menu={filterMenu as DropdownProps["menu"]}
+            trigger={["click"]}
+          >
             <Button icon={<FilterOutlined />}>
               Filter: {filter} <DownOutlined />
             </Button>
@@ -207,14 +215,16 @@ useEffect(() => {
         </DynamicInfiniteScroll>
       </div> */}
       <div className="grid grid-cols-1 gap-8 pb-32">
-          {posts?.map((post) => (
-            <PostCard key={post._id} post={post} />
-          ))}
+        {!isFetching ? (
+          posts?.map((post) => <PostCard key={post._id} post={post} />)
+        ) : (
+          <PostCardSkeleton repeat={[1, 2]}></PostCardSkeleton>
+        )}
 
-          {/* Dummy div to trigger IntersectionObserver */}
-          {hasMore && !isFetching && (
-            <div id="last-post" style={{ height: "20px" }} />
-          )}
+        {/* Dummy div to trigger IntersectionObserver */}
+        {hasMore && !isFetching && (
+          <div id="last-post" style={{ height: "20px" }} />
+        )}
 
         {/* Loading Spinner */}
         {loading && <Spin />}

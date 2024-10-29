@@ -12,6 +12,7 @@ import {
 } from "antd";
 import {
   AlignRightOutlined,
+  DownOutlined,
   LogoutOutlined,
   MoonOutlined,
   SettingOutlined,
@@ -19,7 +20,6 @@ import {
   TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
   selectCurrentTheme,
@@ -40,13 +40,15 @@ import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import Button from "../ui/button/Button";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 import Title from "antd/es/typography/Title";
+import { IUser } from "@/types";
 
 const { Header: HeaderPart } = Layout;
 
 const Header = ({ className = "" }: { className?: string }) => {
   const path = usePathname();
   const isMobile = useAppSelector(selectCurrentDevice);
-  const currentUser = useAppSelector(selectCurrentUser);
+  const currentUser: IUser | null = useAppSelector(selectCurrentUser);
+  const profilePhoto = currentUser?.profilePicture || currentUser?.name[0].toUpperCase() || <UserOutlined />;
   const [pathname, setPathName] = useState(path?.substring(1) || "dashboard");
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(selectCurrentTheme);
@@ -154,20 +156,11 @@ const Header = ({ className = "" }: { className?: string }) => {
           verticalAlign: "middle",
           width: "44px",
           height: "44px",
+          cursor: "pointer",
         }}
-        src={
-          <Image
-            src={
-              (currentUser?.profilePicture ||
-                currentUser?.name[0].toUpperCase()) as string
-            }
-            alt="profile_photo"
-            width={48}
-            height={48}
-          />
-        }
+        src={ profilePhoto }
+        icon={<DownOutlined size={14} className="z-50"></DownOutlined>}
       >
-        S
       </Avatar>
     </Dropdown>
   );

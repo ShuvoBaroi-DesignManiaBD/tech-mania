@@ -46,7 +46,7 @@ export type TPostCategory =
 // Post structure
 export interface IPost {
   _id: string;
-  author: IAuthor;
+  author: IAuthor | string;
   title: string;
   content: string; // Could be HTML or Markdown depending on the editor
   category: TPostCategory;
@@ -57,12 +57,18 @@ export interface IPost {
   upvotes: string[];
   downvotes: string[];
   numberOfComments: number;
-  numberOfDownvotes: number;
-  numberOfUpvotes: number;
+  numberOfDownvotes: {count?: number};
+  numberOfUpvotes: {count?: number};
   isDeleted: boolean;
   isBlocked: boolean;
   comments?: string[];
   createdAt: string;
+}
+
+export type TPostInteractions = {
+  upvotes: number;
+  downvotes: number;
+  comments: number;
 }
 
 export interface IAuthor {

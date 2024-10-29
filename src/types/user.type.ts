@@ -3,7 +3,9 @@ import { TPaymentInfo } from "./payment.type";
 export type TUserRole = 'user' | 'admin';
 
 export interface IUser {
+  _id?: string;
   name: string;
+  username: string;
   email: string;
   phone?: string;
   password: string;
@@ -16,6 +18,9 @@ export interface IUser {
   following?: string[]; // List of followed user IDs
   posts?: string[]; // List of user's post IDs
   paymentInfo?: TPaymentInfo;
+  createdAt?: string;
+  updatedAt?: string;
+  numberOfPosts?: number;
 }
 
 // User profile update

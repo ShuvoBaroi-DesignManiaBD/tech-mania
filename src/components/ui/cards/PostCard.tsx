@@ -1,12 +1,5 @@
 "use client";
-import {
-  Card,
-  Typography,
-  Avatar,
-  Divider,
-  Button,
-  Tooltip,
-} from "antd";
+import { Card, Typography, Avatar, Divider, Button, Tooltip, Tag } from "antd";
 import {
   LikeOutlined,
   DislikeOutlined,
@@ -19,20 +12,40 @@ import {
   PlayCircleOutlined,
 } from "@ant-design/icons";
 import { formatDistanceToNow } from "date-fns";
-import { IPost } from "@/types";
+import { IPost, TPostInteractions } from "@/types";
 import Image from "next/image";
-import PostCardWithComments from "./PostCardWithComments";
-import ReactPlayer from "react-player";
+// import PostCardWithComments from "./PostCardWithComments";
+// import ReactPlayer from "react-player";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 import { useState } from "react";
+import "react-quill/dist/quill.snow.css"; // Quill's snow theme CSS
+import "quill-emoji/dist/quill-emoji.css";
+import { useAddDownvoteMutation, useAddUpvoteMutation } from "@/redux/features/vote/voteApi";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { voteType } from "@/constant";
+import { TVoteType } from "@/types/vote.type";
+import { useGetAPostInteractionsQuery } from "@/redux/features/posts/postApi";
+import dynamic from "next/dynamic";
 
-const { Text, Paragraph } = Typography;
+// Dynamic import to prevent SSR for the ReactPlayer component
+const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+const PostCardWithComments = dynamic(() => import("./PostCardWithComments"), { ssr: false });
+
+const { Text } = Typography;
 
 interface PostCardProps {
   post: IPost;
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  console.log(post);
+  
+  const currentUser = useAppSelector(selectCurrentUser);
+  const [addUpvote] = useAddUpvoteMutation();
+  const [addDownvote] = useAddDownvoteMutation();
+  const { data:interactions } = useGetAPostInteractionsQuery(post?._id);
+  const postInteractions = interactions?.data || [];
   const [isOpen, setIsOpen] = useState(false);
   const [playerError, setPlayerError] = useState(false);
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
@@ -41,21 +54,36 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     setPlayerError(true);
   };
 
-  const handleMediaSelect = (index: number) => {
-    setSelectedMediaIndex(index);
+  // ============= Vote Actions =============
+
+  const handleUpvote = () => {
+    if (!currentUser) {
+      return;
+    }
+    addUpvote({
+      userId: currentUser._id,
+      parentId: post._id,
+      type: voteType.upvote as TVoteType,
+      parentType: 'Post',
+    });
   };
 
-  const handleNext = () => {
-    if (selectedMediaIndex < mediaArray.length - 1) {
-      setSelectedMediaIndex((prev) => prev + 1);
+  const handleDownvote = () => {
+    if (!currentUser) {
+      return;
     }
+    addDownvote({
+      userId: currentUser._id,
+      parentId: post._id,
+      type: voteType.downvote as TVoteType,
+      parentType: 'Post'
+    });
   };
 
-  const handlePrev = () => {
-    if (selectedMediaIndex > 0) {
-      setSelectedMediaIndex((prev) => prev - 1);
-    }
-  };
+  // ============= Media Slider =============
+  const handleMediaSelect = (index: number) => setSelectedMediaIndex(index);
+  const handleNext = () => selectedMediaIndex < mediaArray.length - 1 && setSelectedMediaIndex((prev) => prev + 1);
+  const handlePrev = () => selectedMediaIndex > 0 && setSelectedMediaIndex((prev) => prev - 1);
 
   // Helper function to extract the video ID from the YouTube URL
   const getYoutubeVideoId = (url: string) => {
@@ -73,33 +101,50 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   return (
     <Card
-      className="w-full m-1 shadow-sm rounded-lg"
+      className="w-full m-1 shadow-sm rounded-lg !relative"
       hoverable
       bordered
       title={
-        <Typography.Title
-          level={2}
-          style={{ color: TokenProvider().colorText }}
-          className="mt-4 pl-3 border-l-[4px] border-light-primary"
-        >
-          {post?.title}
-        </Typography.Title>
+        <div className="flex items-center">
+          <Typography.Title
+            level={2}
+            style={{ color: TokenProvider().colorText }}
+            className="mt-4 pl-3 border-l-[4px] border-light-primary"
+          >
+            {post?.title}
+          </Typography.Title>
+          <Tag
+            color="blue-inverse"
+            className="!absolute -right-2.5 -top-0.5 !px-4 !py-1 !rounded-lg !rounded-tl-none !rounded-br-none !border-none"
+          >
+            {post?.category}
+          </Tag>
+        </div>
       }
     >
       {/* Post Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Avatar
-            src={post?.author?.profilePicture}
-            icon={!post?.author?.profilePicture && <UserOutlined />}
+            src={
+              post.author && typeof post.author === "object"
+                ? post.author.profilePicture
+                : ""
+            }
+            icon={
+              (post.author &&
+                typeof post.author === "object" &&
+                post.author?.profilePicture) || <UserOutlined />
+            }
             size={48}
             className="mr-3"
           />
           <div>
             <Text strong className="block leading-[16px]">
-              {post?.author?.name || "Unknown Author"}
+              {(typeof post.author === "object" && post.author?.name) ||
+                "Unknown Author"}
             </Text>
-            <Text>
+            <Text className="!text-sm">
               {formatDistanceToNow(new Date(post?.createdAt), {
                 addSuffix: true,
               })}
@@ -109,32 +154,45 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       </div>
 
       {/* Post Content */}
-      <Paragraph>{post?.content || "No content available"}</Paragraph>
+      <Typography className="flex gap-2">
+        <div
+          dangerouslySetInnerHTML={{
+            __html: post?.content || "No content available",
+          }}
+          className="line-clamp-3"
+        />
+        <Button
+          onClick={() => setIsOpen(true)}
+          className="mt-4 underline !p-0 !text-light-primaryTextHover"
+          type="link"
+        >
+          Read more
+        </Button>
+      </Typography>
 
       {/* Post Media Slider */}
       <div className="relative w-full">
-
         {/* Main Image/Video Display */}
         <div className="w-full h-[55vh] flex justify-center items-center relative">
-        <div className="absolute w-full flex justify-between">
-        {/* Left Navigation */}
-        {selectedMediaIndex > 0 && (
-          <Button
-            className="absolute left-0 !py-8 transform z-10 bg-white"
-            icon={<LeftOutlined />}
-            onClick={handlePrev}
-          />
-        )}
+          <div className="absolute w-full flex justify-between">
+            {/* Left Navigation */}
+            {selectedMediaIndex > 0 && (
+              <Button
+                className="absolute left-0 !py-8 transform z-10 bg-white"
+                icon={<LeftOutlined />}
+                onClick={handlePrev}
+              />
+            )}
 
-        {/* Right Navigation */}
-        {selectedMediaIndex < mediaArray.length - 1 && (
-          <Button
-            className="absolute !py-8 !right-0 transform z-10 bg-white"
-            icon={<RightOutlined />}
-            onClick={handleNext}
-          />
-        )}
-        </div>
+            {/* Right Navigation */}
+            {selectedMediaIndex < mediaArray.length - 1 && (
+              <Button
+                className="absolute !py-8 !right-0 transform z-10 bg-white"
+                icon={<RightOutlined />}
+                onClick={handleNext}
+              />
+            )}
+          </div>
           {mediaArray[selectedMediaIndex].includes("youtube.com") ||
           mediaArray[selectedMediaIndex].includes("youtu.be") ? (
             !playerError ? (
@@ -224,20 +282,24 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       {/* Post Actions */}
       <div className="flex items-center space-x-2 pt-4">
         <Tooltip title="Upvote">
-          <Button type="text" icon={<LikeFilled />} size="small">
-            {post?.upvotes?.length || 0}
+          <Button
+            type="text"
+            icon={<LikeFilled />}
+            size="small"
+          >
+            { (postInteractions as TPostInteractions).upvotes || 0}
           </Button>
         </Tooltip>
 
         <Tooltip title="Downvote">
-          <Button type="text" icon={<DislikeFilled />} size="small">
-            {post?.downvotes?.length || 0}
+          <Button type="text" icon={<DislikeFilled />} size="small" >
+          { (postInteractions as TPostInteractions).downvotes || 0}
           </Button>
         </Tooltip>
 
         <Tooltip title="Comments">
           <Button type="text" icon={<CommentOutlined />} size="small">
-            {post?.numberOfComments || 0}
+            { (postInteractions as TPostInteractions).comments || 0}
           </Button>
         </Tooltip>
       </div>
@@ -245,10 +307,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <Divider className="my-4" />
 
       <div className="flex justify-evenly items-center">
-        <Typography.Text className="flex items-center font-medium">
+        <Typography.Text className="flex items-center font-medium" onClick={handleUpvote}>
           <LikeOutlined className="[&&_svg]:size-6 mr-2" /> Upvote
         </Typography.Text>
-        <Typography.Text className="flex items-center font-medium">
+        <Typography.Text className="flex items-center font-medium" onClick={handleDownvote}>
           <DislikeOutlined className="[&&_svg]:size-6 mr-2" /> Downvote
         </Typography.Text>
         <Typography.Text
@@ -262,7 +324,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
       {/* Comments Section */}
       {isOpen && (
-        <PostCardWithComments post={post} isOpen={isOpen} setIsOpen={setIsOpen} />
+        <PostCardWithComments
+          post={post}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
       )}
     </Card>
   );
