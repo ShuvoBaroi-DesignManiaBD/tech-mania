@@ -6,8 +6,9 @@ import dynamic from "next/dynamic";
 import { useGetAllPostsQuery } from "@/redux/features/posts/postApi";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 import { IPost } from "@/types/post.type";
-import { DropdownProps, Spin } from "antd";
+import { Spin } from "antd";
 import PostCardSkeleton from "@/components/ui/Skeletons/PostCardSkeleton";
+import NotFound from "@/components/ui/NotFound";
 
 // Dynamic imports for Ant Design components
 const Input = dynamic(() => import("antd").then((mod) => mod.Input), {
@@ -54,7 +55,7 @@ const PostCreate = dynamic(
 //   { ssr: false }
 // );
 
-const categories = ["Tutorials", "Guides", "Tips", "Tech News"];
+const categories = ["Web", "AI", "Gadgets", "Software Engineering", "Apps"];
 
 const Page = () => {
   const [posts, setPosts] = useState<IPost[] | []>([]); // State to store posts
@@ -63,11 +64,11 @@ const Page = () => {
   const [hasMore, setHasMore] = useState(true); // Track if more posts are available
   const [filter, setFilter] = useState("All"); // Filter state
   const [sortOrder, setSortOrder] = useState("Most Recent"); // Sort state
-  const [, setSearchTerm] = useState(""); // Search state
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Search state
   const observer = useRef<IntersectionObserver | null>(null); // Ref for IntersectionObserver
 
   // Fetch posts based on page and limit
-  const { data, isFetching } = useGetAllPostsQuery({ page, limit: 3 });
+  const { data, isFetching, isSuccess } = useGetAllPostsQuery({ page, limit: 3, category: filter === 'All' ? null : filter, sort: sortOrder, searchTerm: searchTerm.length > 0 ? searchTerm : null });
 
   // Effect to append new posts to the state when data changes
   useEffect(() => {
@@ -77,7 +78,8 @@ const Page = () => {
       if (
         data?.success === false ||
         posts.length > (data as any)?.totalPosts ||
-        data.data.length <= (data as any)?.totalPosts
+        data.data.length <= (data as any)?.totalPosts ||
+        !isSuccess
       ) {
         setLoading(false); // Start loading more if more posts are available
         setHasMore(false); // Stop loading more if no new posts or less than limit
@@ -90,11 +92,13 @@ const Page = () => {
     if (hasMore && !isFetching) {
       setLoading(true);
       setPage((prevPage) => prevPage + 1); // Increment page to fetch more posts
+    } else if(isSuccess){
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (data) {
+    if (data && isSuccess) {
       setPosts((prevPosts) => [...prevPosts, ...data.data]); // Append posts
       setLoading(false); // Stop loading once data is fetched
 
@@ -103,7 +107,11 @@ const Page = () => {
         setHasMore(false); // Stop loading more if no new posts
       }
     }
-  }, [data]);
+    if(searchTerm.length === 0) {
+      setSearchTerm('');
+      setPage(1);
+    }
+  }, [data, searchTerm.length]);
 
   // IntersectionObserver to trigger loadMorePosts when last post is in view
   useEffect(() => {
@@ -129,16 +137,26 @@ const Page = () => {
 
   // Search handler (debounced for better performance)
   const handleSearch = debounce((value: string) => {
-    setSearchTerm(value);
+    if(value.length > 2) {
+      setPosts([]);
+    setPage(1);
+      console.log(value);
+      
+     return  setSearchTerm(typeof value === "string" ? value : '');
+    }
   }, 300);
 
   // Filter change handler
   const handleFilterChange = ({ key }: { key: string }) => {
+    setPosts([]);
+    setPage(1);
     setFilter(key);
   };
 
   // Sort change handler
   const handleSortChange = ({ key }: { key: string }) => {
+    setPosts([]);
+    setPage(1);
     setSortOrder(key);
   };
 
@@ -146,8 +164,7 @@ const Page = () => {
   const sortMenu = (
     <Menu onClick={handleSortChange}>
       <MenuItem key="Most Recent">Most Recent</MenuItem>
-      <MenuItem key="Most Upvoted">Most Upvoted</MenuItem>
-      <MenuItem key="Most Helpful">Most Helpful</MenuItem>
+      <MenuItem key="Oldest">Oldest</MenuItem>
     </Menu>
   );
 
@@ -167,6 +184,8 @@ const Page = () => {
         <Input
           placeholder="Search for tips, guides, or tutorials..."
           prefix={<SearchOutlined />}
+          allowClear
+          onClear={() => setSearchTerm('')}
           className="max-w-sm"
           style={{ color: TokenProvider().colorText }}
           styles={{ input: { color: TokenProvider().colorText } }}
@@ -175,7 +194,7 @@ const Page = () => {
 
         <Space>
           <Dropdown
-            menu={filterMenu as DropdownProps["menu"]}
+            overlay={filterMenu}
             trigger={["click"]}
           >
             <Button icon={<FilterOutlined />}>
@@ -215,20 +234,24 @@ const Page = () => {
         </DynamicInfiniteScroll>
       </div> */}
       <div className="grid grid-cols-1 gap-8 pb-32">
-        {!isFetching ? (
-          posts?.map((post) => <PostCard key={post._id} post={post} />)
-        ) : (
-          <PostCardSkeleton repeat={[1, 2]}></PostCardSkeleton>
-        )}
+  {/* Show the posts or skeleton while fetching */}
+  {!isFetching ? (
+    posts.length ? (
+      posts.map((post) => <PostCard key={post._id} post={post} />)
+    ) : (
+      <NotFound message="No posts found!" className="-mt-20" />
+    )
+  ) : (
+    <PostCardSkeleton repeat={[1, 2]} />
+  )}
 
-        {/* Dummy div to trigger IntersectionObserver */}
-        {hasMore && !isFetching && (
-          <div id="last-post" style={{ height: "20px" }} />
-        )}
+  {/* Dummy div to trigger IntersectionObserver */}
+  {hasMore && !isFetching && <div id="last-post" style={{ height: "20px" }} />}
 
-        {/* Loading Spinner */}
-        {loading && <Spin />}
-      </div>
+  {/* Loading Spinner for ongoing requests */}
+  {loading && <Spin />}
+</div>
+
     </div>
   );
 };

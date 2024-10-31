@@ -1,6 +1,11 @@
 "use client";
 import Button from "@/components/ui/button/Button";
+import { voteType } from "@/constant";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAddDownvoteMutation, useAddUpvoteMutation } from "@/redux/features/vote/voteApi";
+import { useAppSelector } from "@/redux/hooks";
 import { TComment } from "@/types";
+import { TVoteType } from "@/types/vote.type";
 import { DislikeOutlined, LikeOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, theme, Tooltip, Typography } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
@@ -12,7 +17,33 @@ const ReplyItem = ({
 }: {
   reply: TComment;
 }) => {
+  const currentUser = useAppSelector(selectCurrentUser);
   const {token} = theme.useToken();
+  const [addUpvote] = useAddUpvoteMutation();
+  const [addDownvote] = useAddDownvoteMutation();
+  const handleUpvote = () => {
+    if (!currentUser) {
+      return;
+    }
+    addUpvote({
+      userId: currentUser._id,
+      parentId: reply._id,
+      type: voteType.upvote as TVoteType,
+      parentType: 'Comment',
+    });
+  };
+
+  const handleDownvote = () => {
+    if (!currentUser) {
+      return;
+    }
+    addDownvote({
+      userId: currentUser._id,
+      parentId: reply._id,
+      type: voteType.downvote as TVoteType,
+      parentType: 'Comment'
+    });
+  };
   return (
   <div className="">
     <div className="grid grid-cols-12 gap-0 items-start">
@@ -35,12 +66,12 @@ const ReplyItem = ({
         {/* Upvote / Downvote Buttons */}
         <div className="w-1/5 flex items-center space-x-2">
           <Tooltip title="Upvote">
-            <Button shape="default" icon={<LikeOutlined />} size="small">
+            <Button shape="default" icon={<LikeOutlined />} size="small" onClick={handleUpvote}>
               {reply?.upvoteCount}
             </Button>
           </Tooltip>
           <Tooltip title="Downvote">
-            <Button shape="default" icon={<DislikeOutlined />} size="small">
+            <Button shape="default" icon={<DislikeOutlined />} size="small" onClick={handleDownvote}>
               {reply?.downvoteCount}
             </Button>
           </Tooltip>

@@ -44,7 +44,7 @@ const commentApi = baseAPI.injectEndpoints({
       //     console.error("Error fetching posts:", error);
       //   }
       // },
-      providesTags: ["comments"],
+      providesTags: ["replies"],
     }),
 
     getAComment: builder.query<IPost, string>({

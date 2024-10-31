@@ -14,7 +14,7 @@ const Page = () => {
   const { data, isSuccess , isFetching} = useGetAUserQuery(currentUser?._id as string);
   
   return (
-    <div className="columns-1 space-y-5">
+    <div className="columns-1 space-y-5 pb-32">
       <ProfileHeader user={data?.data as IUser} success={isSuccess} fetching={isFetching}/>
 
       <div className="grid grid-cols-6 gap-5">

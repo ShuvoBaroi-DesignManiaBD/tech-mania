@@ -4,9 +4,9 @@ import { IPost, TPostInteractions, TResponse } from "@/types";
 
 const postApi = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
-    getAllPosts: builder.query<TResponse<IPost[]>, { page?: number; limit?: number }>({
-      query: ({ page = 1, limit = 6 }) => ({
-        url: `/posts/all-posts?page=${page}&limit=${limit}`,
+    getAllPosts: builder.query<TResponse<IPost[]>, { page?: number; limit?: number, category: string | null, sort: string, searchTerm?: string | null}>({
+      query: ({ page = 1, limit = 6, category = null, sort = "dsc", searchTerm=null }) => ({
+        url: `/posts/all-posts?page=${page}&limit=${limit}${category ? `&category=${category}` : ""}&sort=createdAt:${sort === "Most Recent" ? "dsc" : "asc"}${searchTerm ? `&searchTerm=${searchTerm}` : ""}`, // ?category=${category}}&sort=${sort}`,
         method: "GET",
       }),
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {

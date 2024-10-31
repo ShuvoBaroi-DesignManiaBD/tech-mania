@@ -10,7 +10,7 @@ const voteApi = baseAPI.injectEndpoints({
           method: "POST",
           body: data,
         }),
-        onQueryStarted: async (arg, { getState, dispatch, queryFulfilled }) => {
+        onQueryStarted: async (arg, { getState, queryFulfilled }) => {
           try {
             const rootState = getState();
             console.log(rootState);
@@ -24,7 +24,7 @@ const voteApi = baseAPI.injectEndpoints({
             console.error("Error fetching posts:", error);
           }
         },
-        invalidatesTags: ["postInteractions"],
+        invalidatesTags: ["postInteractions", "replies", "commentVotes", "comments"],
       }),
     addDownvote: builder.mutation<void,  Partial<TVote> >({
         query: ( data ) => ({
@@ -32,7 +32,7 @@ const voteApi = baseAPI.injectEndpoints({
           method: "POST",
           body: data,
         }),
-        invalidatesTags: ["postInteractions"],
+        invalidatesTags: ["postInteractions", "replies", "commentVotes", "comments"],
       }),
     getPostVotes: builder.query<
       TResponse<TVote[]>,
@@ -42,7 +42,7 @@ const voteApi = baseAPI.injectEndpoints({
         url: `/votes/get-post-votes/${postId}`,
         method: "GET",
       }),
-      providesTags: ["postVotes"],
+      providesTags: ["postVotes", "replies"],
     }),
 
     getCommentVotes: builder.query<
@@ -53,7 +53,7 @@ const voteApi = baseAPI.injectEndpoints({
         url: `/votes/get-comment-votes/${commentId}`,
         method: "GET",
       }),
-      providesTags: ["comments"],
+      providesTags: ["commentVotes"],
     }),
   }),
 });

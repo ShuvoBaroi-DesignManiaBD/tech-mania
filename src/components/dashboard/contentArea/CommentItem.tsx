@@ -4,11 +4,43 @@ import { Avatar, Button, theme, Tooltip, Typography } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import { TComment } from "@/types";
 import ReplySection from "./ReplySection";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAddDownvoteMutation, useAddUpvoteMutation } from "@/redux/features/vote/voteApi";
+import { voteType } from "@/constant";
+import { TVoteType } from "@/types/vote.type";
 
 const CommentItem = ({
   comment
 }: {comment:TComment}) => {
   const {token} = theme.useToken();
+  const currentUser = useAppSelector(selectCurrentUser);
+  const [addUpvote] = useAddUpvoteMutation();
+  const [addDownvote] = useAddDownvoteMutation();
+
+  const handleUpvote = () => {
+    if (!currentUser) {
+      return;
+    }
+    addUpvote({
+      userId: currentUser._id,
+      parentId: comment._id,
+      type: voteType.upvote as TVoteType,
+      parentType: 'Comment',
+    });
+  };
+
+  const handleDownvote = () => {
+    if (!currentUser) {
+      return;
+    }
+    addDownvote({
+      userId: currentUser._id,
+      parentId: comment._id,
+      type: voteType.downvote as TVoteType,
+      parentType: 'Comment'
+    });
+  };
   return (
     <div className="relative mb-4">
       {/* Main Comment */}
@@ -30,13 +62,13 @@ const CommentItem = ({
         {/* Upvote / Downvote Buttons */}
         <div className="flex items-center space-x-2">
           <Tooltip title="Upvote">
-            <Button shape="default" icon={<LikeOutlined />} size="small">
-              {comment?.upvoteCount}
+            <Button shape="default" icon={<LikeOutlined />} size="small" onClick={handleUpvote}>
+              {comment &&comment?.upvoteCount}
             </Button>
           </Tooltip>
           <Tooltip title="Downvote">
-            <Button shape="default" icon={<DislikeOutlined />} size="small">
-              {comment?.downvoteCount}
+            <Button shape="default" icon={<DislikeOutlined />} size="small" onClick={handleDownvote}>
+              {comment && comment?.downvoteCount}
             </Button>
           </Tooltip>
         </div>
