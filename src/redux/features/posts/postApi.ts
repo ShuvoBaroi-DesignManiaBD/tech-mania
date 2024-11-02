@@ -62,19 +62,20 @@ const postApi = baseAPI.injectEndpoints({
       { postId: string; updatedPost: Partial<IPost> }
     >({
       query: ({ postId, updatedPost }) => ({
-        url: `posts/update-post?postId=${postId}`,
+        url: `posts/update-post-content/${postId}`,
         method: "PATCH",
         body: updatedPost,
       }),
-      invalidatesTags: ["posts"], // This invalidates the cache of posts to refetch them after the update
+      invalidatesTags: ["posts", "userPosts"], // This invalidates the cache of posts to refetch them after the update
     }),
 
-    deleteAPost: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `posts/${id}`,
-        method: "DELETE",
+    deleteAPost: builder.mutation<void, { id: string, userId: string }>({
+      query: ({id,userId}) => ({
+        url: `posts/delete-post?postId=${id}&userId=${userId}`,
+        method: "PATCH",
+        // body: userId
       }),
-      invalidatesTags: ["posts"],
+      invalidatesTags: ["posts", "userPosts"],
     }),
 
     addAPost: builder.mutation<void, { data: Partial<IPost> }>({

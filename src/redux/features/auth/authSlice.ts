@@ -2,7 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { IUser } from "@/types";
 import { RootState } from "@/redux/store";
-
+import logoutFromServer from "@/actions/navigate";
 export type TAuthState = {
   user: null | IUser;
   token: null | string;

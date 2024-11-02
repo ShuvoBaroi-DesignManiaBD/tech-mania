@@ -9,18 +9,14 @@ const userApi = baseAPI.injectEndpoints({
         url: `/users/all-users?page=${page}&limit=${limit}`,
         method: "GET",
       }),
-      onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
-        try {
-          const { data } = await queryFulfilled; // Wait for the query to fulfill
-          console.log("Data:", data);
-          
-          // Directly dispatch the data to Redux store
-          dispatch(setPosts(data?.data)); // Assuming the API returns the array directly (not inside a `data` object)
-        } catch (error) {
-          console.error("Error fetching posts:", error);
-        }
-      },
-      providesTags: ["posts"],
+      providesTags: ["allUsers"],
+    }),
+    getSuggestedUsers: builder.query<TResponse<IUser[]>, { id: string, page?: number; limit?: number }>({
+      query: ({ id, page = 1, limit = 6 }) => ({
+        url: `/users/suggested-users?id=${id}&page=${page}&limit=${limit}`,
+        method: "GET",
+      }),
+      providesTags: ["suggestedUsers"],
     }),
 
     getAUser: builder.query<{data:IUser}, string>({
@@ -35,11 +31,22 @@ const userApi = baseAPI.injectEndpoints({
       { postId: string; updatedPost: Partial<IPost> }
     >({
       query: ({ postId, updatedPost }) => ({
-        url: `posts/update-post?postId=${postId}`,
+        url: `users/update-user?postId=${postId}`,
         method: "PATCH",
         body: updatedPost,
       }),
       invalidatesTags: ["posts"], // This invalidates the cache of posts to refetch them after the update
+    }),
+
+    followAUser: builder.mutation<
+      void,
+      { userId: string }
+    >({
+      query: ({ userId }) => ({
+        url: `users/follow-user/${userId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["suggestedUsers", 'user'], // This invalidates the cache of posts to refetch them after the update
     }),
 
     deleteAUser: builder.mutation<void, string>({
@@ -65,6 +72,8 @@ export const {
   useAddAUserMutation,
   useGetAUserQuery,
   useGetAllUsersQuery,
+  useGetSuggestedUsersQuery,
   useDeleteAUserMutation,
-  useUpdateAUserMutation
+  useUpdateAUserMutation,
+  useFollowAUserMutation,
 } = userApi;

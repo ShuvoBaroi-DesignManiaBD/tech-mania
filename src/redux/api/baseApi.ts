@@ -11,9 +11,10 @@ const baseQuery = fetchBaseQuery({
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
+      console.log("the token=>",token);
+      
       if (token) {
         headers.set('accessToken', `${token}`);
-        // cookies().set('accessToken', `${token}`);
       }
   
       return headers;
@@ -75,6 +76,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, unknown, unknown> = asyn
 export const baseAPI = createApi({
   reducerPath: 'baseAPI',
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ['posts', 'comments', 'replies','users', 'userPosts', 'votes', 'upvotes', 'downvotes', 'postVotes', 'postInteractions', 'commentVotes'],
+  tagTypes: ['user','posts', 'comments', 'replies','allUsers', 'suggestedUsers','userPosts', 'votes', 'upvotes', 'downvotes', 'postVotes', 'postInteractions', 'commentVotes'],
   endpoints: () => ({}),
 });

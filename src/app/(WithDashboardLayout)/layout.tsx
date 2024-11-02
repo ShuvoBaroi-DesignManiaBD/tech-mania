@@ -9,6 +9,7 @@ import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { usePathname, useRouter } from "next/navigation";
+import { navigate } from "@/actions/navigate";
 
 // const { Title, Text, Paragraph } = Typography;
 
@@ -20,21 +21,22 @@ const Layout = ({children}:{children:ReactNode}) => {
   const currentUser = useAppSelector(selectCurrentUser);
   console.log(currentUser);
 
-  useEffect(() => {
-    if (!currentUser) {
-      router.push("/login");
-    }
-  }, [currentUser, router]);
+  // useEffect(() => {
+  //   // if (!currentUser) {
+  //   //   router.push("/login");
+  //   // }
+  //   if (!currentUser && path.includes("/dashboard")) {
+  //     // While redirecting, render nothing (or show a loading spinner if needed)
+  //     router.push("/login");
+  //     // return <LoginPage />;
+  //   } 
+  // }, [currentUser, router, path]);
 
-  if (!currentUser && path !== "/dashboard") {
-    // While redirecting, render nothing (or show a loading spinner if needed)
-    router.push("/login");
-    // return <LoginPage />;
-  } 
 
   // if (!currentUser) {
-  //   return <LoginPage />;
-  // } 
+  //       router.push("/login?logout=true");
+  //       // navigate("?logout=true");
+  //     }
     return (
       <AntdLayout style={{backgroundColor:TokenProvider()?.colorBgBase}}>
       <Header className="px-8"></Header>

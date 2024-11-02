@@ -8,9 +8,9 @@ const authApi = baseAPI.injectEndpoints({
         url: `/auth/signin`,
         method: "POST",
         body: data,
-      })
-    }),
-    
+      }),
+      providesTags: ["user"],
+    })
 }),
 });
 

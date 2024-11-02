@@ -17,10 +17,13 @@ import Image from "next/image";
 // import PostCardWithComments from "./PostCardWithComments";
 // import ReactPlayer from "react-player";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css"; // Quill's snow theme CSS
 import "quill-emoji/dist/quill-emoji.css";
-import { useAddDownvoteMutation, useAddUpvoteMutation } from "@/redux/features/vote/voteApi";
+import {
+  useAddDownvoteMutation,
+  useAddUpvoteMutation,
+} from "@/redux/features/vote/voteApi";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { voteType } from "@/constant";
@@ -30,7 +33,9 @@ import dynamic from "next/dynamic";
 
 // Dynamic import to prevent SSR for the ReactPlayer component
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
-const PostCardWithComments = dynamic(() => import("./PostCardWithComments"), { ssr: false });
+const PostCardWithComments = dynamic(() => import("./PostCardWithComments"), {
+  ssr: false,
+});
 
 const { Text } = Typography;
 
@@ -40,16 +45,27 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   console.log(post);
-  
+
   const currentUser = useAppSelector(selectCurrentUser);
   const [addUpvote] = useAddUpvoteMutation();
   const [addDownvote] = useAddDownvoteMutation();
-  const { data:interactions } = useGetAPostInteractionsQuery(post?._id);
+  const { data: interactions } = useGetAPostInteractionsQuery(post?._id);
   const postInteractions = interactions?.data || [];
   const [isOpen, setIsOpen] = useState(false);
   const [playerError, setPlayerError] = useState(false);
   const [selectedMediaIndex, setSelectedMediaIndex] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+  const [showReadMore, setShowReadMore] = useState(false);
 
+  useEffect(() => {
+    // Estimate if the content exceeds 2 lines based on character count
+    const estimatedLineLimit = 200; // Adjust based on typical line length and font size
+    if ((post?.content || "").length > estimatedLineLimit) {
+      setShowReadMore(true);
+    } else {
+      setShowReadMore(false);
+    }
+  }, [post?.content]);
   const handleVideoError = () => {
     setPlayerError(true);
   };
@@ -64,7 +80,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       userId: currentUser._id,
       parentId: post._id,
       type: voteType.upvote as TVoteType,
-      parentType: 'Post',
+      parentType: "Post",
     });
   };
 
@@ -76,14 +92,17 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       userId: currentUser._id,
       parentId: post._id,
       type: voteType.downvote as TVoteType,
-      parentType: 'Post'
+      parentType: "Post",
     });
   };
 
   // ============= Media Slider =============
   const handleMediaSelect = (index: number) => setSelectedMediaIndex(index);
-  const handleNext = () => selectedMediaIndex < mediaArray.length - 1 && setSelectedMediaIndex((prev) => prev + 1);
-  const handlePrev = () => selectedMediaIndex > 0 && setSelectedMediaIndex((prev) => prev - 1);
+  const handleNext = () =>
+    selectedMediaIndex < mediaArray.length - 1 &&
+    setSelectedMediaIndex((prev) => prev + 1);
+  const handlePrev = () =>
+    selectedMediaIndex > 0 && setSelectedMediaIndex((prev) => prev - 1);
 
   // Helper function to extract the video ID from the YouTube URL
   const getYoutubeVideoId = (url: string) => {
@@ -153,22 +172,23 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         </div>
       </div>
 
-      {/* Post Content */}
-      <Typography className="flex gap-2">
-        <div
-          dangerouslySetInnerHTML={{
-            __html: post?.content || "No content available",
-          }}
-          className="line-clamp-3"
-        />
-        <Button
-          onClick={() => setIsOpen(true)}
-          className="mt-4 underline !p-0 !text-light-primaryTextHover"
-          type="link"
+      <div style={{ backgroundColor: TokenProvider().colorBgElevated}} className="p-4 rounded-lg">
+
+       {/* Post Content */}
+      <div style={{ marginBottom: 16}}>
+        <Typography.Paragraph
+          ellipsis={!expanded ? { rows: 2, expandable: false, symbol: "" } : false}
         >
-          Read more
-        </Button>
-      </Typography>
+          <span dangerouslySetInnerHTML={{ __html: post?.content || "No content available" }} />
+        </Typography.Paragraph>
+        
+        {/* Toggle button only if content exceeds limit */}
+        {showReadMore && (
+          <Typography.Link onClick={() => setExpanded(!expanded)}>
+            {expanded ? "Read less" : "Read more"}
+          </Typography.Link>
+        )}
+      </div>
 
       {/* Post Media Slider */}
       <div className="relative w-full">
@@ -278,28 +298,25 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           ))}
         </div>
       </div>
+      </div>
 
       {/* Post Actions */}
       <div className="flex items-center space-x-2 pt-4">
         <Tooltip title="Upvote">
-          <Button
-            type="text"
-            icon={<LikeFilled />}
-            size="small"
-          >
-            { (postInteractions as TPostInteractions).upvotes || 0}
+          <Button type="text" icon={<LikeFilled />} size="small">
+            {(postInteractions as TPostInteractions).upvotes || 0}
           </Button>
         </Tooltip>
 
         <Tooltip title="Downvote">
-          <Button type="text" icon={<DislikeFilled />} size="small" >
-          { (postInteractions as TPostInteractions).downvotes || 0}
+          <Button type="text" icon={<DislikeFilled />} size="small">
+            {(postInteractions as TPostInteractions).downvotes || 0}
           </Button>
         </Tooltip>
 
         <Tooltip title="Comments">
           <Button type="text" icon={<CommentOutlined />} size="small">
-            { (postInteractions as TPostInteractions).comments || 0}
+            {(postInteractions as TPostInteractions).comments || 0}
           </Button>
         </Tooltip>
       </div>
@@ -307,10 +324,16 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
       <Divider className="my-4" />
 
       <div className="flex justify-evenly items-center">
-        <Typography.Text className="flex items-center font-medium" onClick={handleUpvote}>
+        <Typography.Text
+          className="flex items-center font-medium"
+          onClick={handleUpvote}
+        >
           <LikeOutlined className="[&&_svg]:size-6 mr-2" /> Upvote
         </Typography.Text>
-        <Typography.Text className="flex items-center font-medium" onClick={handleDownvote}>
+        <Typography.Text
+          className="flex items-center font-medium"
+          onClick={handleDownvote}
+        >
           <DislikeOutlined className="[&&_svg]:size-6 mr-2" /> Downvote
         </Typography.Text>
         <Typography.Text

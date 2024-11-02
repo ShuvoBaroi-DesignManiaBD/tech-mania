@@ -41,6 +41,7 @@ import Button from "../ui/button/Button";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 import Title from "antd/es/typography/Title";
 import { IUser } from "@/types";
+import { navigate } from "@/actions/navigate";
 
 const { Header: HeaderPart } = Layout;
 
@@ -79,6 +80,11 @@ const Header = ({ className = "" }: { className?: string }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, [dispatch]);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("?logout=true");
+  }
 
   const menuItems = [
     {
@@ -123,7 +129,7 @@ const Header = ({ className = "" }: { className?: string }) => {
       label: (
         <Button
           color="danger"
-          onClick={() => dispatch(logout())}
+          onClick={() => handleLogout()}
           className="w-full !bg-red-500 border-0 hover:border-0 hover:!text-white"
           icon={<LogoutOutlined />}
         >
