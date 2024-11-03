@@ -6,7 +6,6 @@ import { useGetAllRepliesOfACommentQuery } from "@/redux/features/comments/comme
 const ReplySection = ({parentCommentId}: {parentCommentId: string}) => {
     const {data} = useGetAllRepliesOfACommentQuery({parentCommentId: parentCommentId, page: 1, limit: 6});
     const replies = data?.data;
-    console.log(replies);
     
     const repliesCount = data?.data.length;
     // const {token} = useRe;

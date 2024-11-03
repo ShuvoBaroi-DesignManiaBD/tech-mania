@@ -12,7 +12,6 @@ const postApi = baseAPI.injectEndpoints({
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled; // Wait for the query to fulfill
-          console.log("Data:", data);
           
           // Directly dispatch the data to Redux store
           dispatch(setPosts(data?.data)); // Assuming the API returns the array directly (not inside a `data` object)

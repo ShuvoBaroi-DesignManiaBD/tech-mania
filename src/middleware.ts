@@ -7,11 +7,11 @@ const privateRoutes = ["/dashboard", "/dashboard/profile"];
 function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const query = request.nextUrl.searchParams.get('logout');
-  console.log('query', typeof query, query);
+  // console.log('query', typeof query, query);
 
   // Get accessToken from cookies
   const accessToken = request.cookies.get("accessToken")?.value;
-  console.log("AccessToken:", accessToken, pathname);
+  // console.log("AccessToken:", accessToken, pathname);
 
   // Redirect if trying to access private routes without accessToken
   if (

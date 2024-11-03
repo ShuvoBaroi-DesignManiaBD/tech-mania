@@ -8,6 +8,7 @@ export interface IUser {
   username: string;
   email: string;
   phone?: string;
+  bio?: string;
   password: string;
   profilePicture?: string;
   verified: boolean;

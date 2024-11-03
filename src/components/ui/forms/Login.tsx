@@ -24,11 +24,10 @@ const Login = () => {
   };
 
   const submitForm = async (values: TSignInData) => {
-    console.log(values);
+    // console.log(values);
 
     try {
       const res = await login(values).unwrap();
-      console.log(data, status);
 
       if (res && res?.success) {
         // const user = verifyToken(res?.token || '') as IUser;

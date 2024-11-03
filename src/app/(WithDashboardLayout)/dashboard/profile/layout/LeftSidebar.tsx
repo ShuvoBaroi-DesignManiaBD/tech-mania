@@ -1,13 +1,15 @@
 "use client";
 import Button from "@/components/ui/button/Button";
-import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { selectCurrentUser, selectCurrentUserData } from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
 import { Card, Typography } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import { format } from "date-fns";
 
 const LeftSidebar = ({className=''}):JSX.Element => {
-    const currentUser = useAppSelector(selectCurrentUser);
+  const user = useAppSelector(selectCurrentUser);
+  // dispatch(setUserData(data?.data as IUser));
+    const currentUser = useAppSelector(selectCurrentUserData) || user;
     return (
         <div
           className={`${className}`}
@@ -17,9 +19,7 @@ const LeftSidebar = ({className=''}):JSX.Element => {
         >
           <Card title="Profile Information" className="mb-4" bordered={false}>
             <Paragraph>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-              scelerisque euismod nunc ut feugiat. Vivamus suscipit justo nec
-              odio fermentum, non viverra lorem venenatis.
+              {currentUser?.bio}
             </Paragraph>
             <Paragraph strong>
               Email:{" "}
@@ -32,8 +32,8 @@ const LeftSidebar = ({className=''}):JSX.Element => {
             <Paragraph strong>
               Member since:{" "}
               <Typography.Text className="[&&_strong]:font-normal">
-                {currentUser?.createdAt
-                  ? format(new Date(currentUser.createdAt), "MMMM dd, yyyy")
+                {user?.createdAt
+                  ? format(new Date(user.createdAt), "MMMM dd, yyyy")
                   : "Unknown"}
               </Typography.Text>
             </Paragraph>

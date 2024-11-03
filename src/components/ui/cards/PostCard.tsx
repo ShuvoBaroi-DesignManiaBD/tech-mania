@@ -41,9 +41,11 @@ const { Text } = Typography;
 
 interface PostCardProps {
   post: IPost;
+  width?: number | null;
+  height?: number | null;
 }
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard = ({ post, width=null, height=null }: PostCardProps) => {
   console.log(post);
 
   const currentUser = useAppSelector(selectCurrentUser);
@@ -128,7 +130,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <Typography.Title
             level={2}
             style={{ color: TokenProvider().colorText }}
-            className="mt-4 pl-3 border-l-[4px] border-light-primary"
+            className="!text-xl mt-4 pl-3 border-l-[4px] border-light-primary"
           >
             {post?.title}
           </Typography.Title>
@@ -235,11 +237,11 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                   src={`https://img.youtube.com/vi/${getYoutubeVideoId(
                     mediaArray[selectedMediaIndex]
                   )}/hqdefault.jpg`}
-                  width={1000}
-                  height={400}
+                  width={width || 1000}
+              height={height || 400}
                   objectFit="cover"
                   alt="Video Thumbnail"
-                  className="w-full max-h-[55vh] object-cover rounded-lg"
+                  className={`w-full max-h-[55vh] object-cover rounded-lg !h-[${height}]`}
                 />
                 <PlayCircleOutlined
                   className="absolute text-white"
@@ -255,17 +257,17 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           ) : (
             <Image
               src={mediaArray[selectedMediaIndex]}
-              width={1000}
-              height={400}
+              width={width || 1000}
+              height={height || 400}
               alt="Post content"
-              className="w-full h-[55vh] object-cover rounded-lg"
+              className={`w-full h-[55vh] object-cover rounded-lg !h-[${height}]`}
             />
           )}
         </div>
 
         {/* Thumbnails Navigation */}
         <div className="flex justify-center gap-2 mt-3">
-          {mediaArray.map((media, index) => (
+          {mediaArray?.map((media, index) => (
             <div
               key={index}
               className={`w-24 h-16 border-2 cursor-pointer ${
@@ -275,10 +277,10 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               }`}
               onClick={() => handleMediaSelect(index)}
             >
-              {media.includes("youtube.com") || media.includes("youtu.be") ? (
+              {media && (media?.includes("youtube.com") || media?.includes("youtu.be")) ? (
                 <Image
                   src={`https://img.youtube.com/vi/${getYoutubeVideoId(
-                    media
+                    media || ''
                   )}/default.jpg`}
                   width={100}
                   height={70}
@@ -287,7 +289,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
                 />
               ) : (
                 <Image
-                  src={media}
+                  src={media || ''}
                   width={100}
                   height={70}
                   alt="Post content"

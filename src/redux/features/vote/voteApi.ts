@@ -10,20 +10,18 @@ const voteApi = baseAPI.injectEndpoints({
           method: "POST",
           body: data,
         }),
-        onQueryStarted: async (arg, { getState, queryFulfilled }) => {
-          try {
-            const rootState = getState();
-            console.log(rootState);
+        // onQueryStarted: async (arg, { getState, queryFulfilled }) => {
+        //   try {
+        //     const rootState = getState();
+
+        //     const { data } = await queryFulfilled; // Wait for the query to fulfill
             
-            const { data } = await queryFulfilled; // Wait for the query to fulfill
-            console.log("Data:", data);
-            
-            // Directly dispatch the data to Redux store
-            // dispatch(setPosts(data?.data)); // Assuming the API returns the array directly (not inside a `data` object)
-          } catch (error) {
-            console.error("Error fetching posts:", error);
-          }
-        },
+        //     // Directly dispatch the data to Redux store
+        //     // dispatch(setPosts(data?.data)); // Assuming the API returns the array directly (not inside a `data` object)
+        //   } catch (error) {
+        //     console.error("Error fetching posts:", error);
+        //   }
+        // },
         invalidatesTags: ["postInteractions", "replies", "commentVotes", "comments"],
       }),
     addDownvote: builder.mutation<void,  Partial<TVote> >({

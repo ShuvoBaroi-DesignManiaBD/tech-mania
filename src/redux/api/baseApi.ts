@@ -11,8 +11,6 @@ const baseQuery = fetchBaseQuery({
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
-      console.log("the token=>",token);
-      
       if (token) {
         headers.set('accessToken', `${token}`);
       }
@@ -31,7 +29,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, unknown, unknown> = asyn
       showMessage({type:'error', message: 'An error occurred.'});
     } else if (status === 401) {
       //* Send Refresh Token Request
-      console.log('Sending refresh token');
 
       try {
         const res = await fetch(`${envConfig.baseApi}/auth/refresh-token`, {
@@ -41,11 +38,8 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, unknown, unknown> = asyn
         });
 
         const data = await res.json();
-        // console.log(data);
         
         if (data?.data?.accessToken) {
-          console.log((api.getState() as RootState).auth.user);
-          
           const user = (api.getState() as RootState).auth.user;
 
           // Update the token in state
@@ -76,6 +70,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, unknown, unknown> = asyn
 export const baseAPI = createApi({
   reducerPath: 'baseAPI',
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ['user','posts', 'comments', 'replies','allUsers', 'suggestedUsers','userPosts', 'votes', 'upvotes', 'downvotes', 'postVotes', 'postInteractions', 'commentVotes'],
+  tagTypes: ['user','auth','currentUser','posts', 'comments', 'replies','allUsers', 'suggestedUsers','userPosts', 'votes', 'upvotes', 'downvotes', 'postVotes', 'postInteractions', 'commentVotes'],
   endpoints: () => ({}),
 });

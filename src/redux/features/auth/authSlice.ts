@@ -1,15 +1,16 @@
-"use client";
+'use client';
 import { createSlice } from "@reduxjs/toolkit";
 import { IUser } from "@/types";
 import { RootState } from "@/redux/store";
-import logoutFromServer from "@/actions/navigate";
 export type TAuthState = {
   user: null | IUser;
+  userData: null | IUser;
   token: null | string;
 };
 
 const initialState: TAuthState = {
   user: null,
+  userData: null,
   token: null,
 };
 
@@ -19,10 +20,12 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       const { user, token } = action.payload;
-      console.log(user, token);
 
       state.user = user;
       state.token = token;
+    },
+    setUserData: (state, action) => {
+      state.userData = action.payload;
     },
     logout: (state) => {
       state.user = null;
@@ -31,9 +34,10 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, logout } = authSlice.actions;
+export const { setUser, setUserData, logout } = authSlice.actions;
 
 export default authSlice.reducer;
 
 export const selectCurrentToken = (state: RootState) => state.auth.token;
 export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectCurrentUserData = (state: RootState) => state.auth.userData;

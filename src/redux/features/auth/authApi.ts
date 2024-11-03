@@ -1,3 +1,4 @@
+"use client";
 import { baseAPI } from "@/redux/api/baseApi";
 import { TResponse, TSignInData } from "@/types";
 
@@ -9,8 +10,7 @@ const authApi = baseAPI.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      providesTags: ["user"],
-    })
+    }),
 }),
 });
 

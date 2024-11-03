@@ -1,16 +1,19 @@
 "use client";
 import { MdVerified } from "react-icons/md"; 
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
-import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { selectCurrentUser, selectCurrentUserData} from "@/redux/features/auth/authSlice";
 import { useAppSelector } from "@/redux/hooks";
-import { CheckCircleFilled, CheckCircleOutlined, EditOutlined } from "@ant-design/icons";
+import { EditOutlined } from "@ant-design/icons";
 import { Avatar, Button, Card, Space, Typography } from "antd";
-import CheckableTag from "antd/es/tag/CheckableTag";
 import Title from "antd/es/typography/Title";
-import { IUser } from "@/types";
+import { useState } from "react";
+import ProfileEditPopup from "../components/ProfileEditPopup";
 
-const ProfileHeader = ({ user, success, fetching }: {user:IUser, success: boolean, fetching: boolean}) => {
-    const currentUser = useAppSelector(selectCurrentUser);
+const ProfileHeader = () => {
+  const user = useAppSelector(selectCurrentUser);
+  const [showEditPopup, setShowEditPopup] = useState(false);
+  // dispatch(setUserData(data?.data as IUser));
+    const currentUser = useAppSelector(selectCurrentUserData) || user;
     
     return (
         <Card
@@ -57,6 +60,7 @@ const ProfileHeader = ({ user, success, fetching }: {user:IUser, success: boolea
                     type="primary"
                     size="small"
                     className="text-[14px]"
+                    onClick={()=> setShowEditPopup(true)}
                   >
                     Edit
                   </Button>
@@ -71,7 +75,7 @@ const ProfileHeader = ({ user, success, fetching }: {user:IUser, success: boolea
           {/* Post, Followers, and Following Counts */}
           <div className="mt-4 sm:mt-0 text-center sm:text-left flex gap-10 flex-grow justify-evenly">
             <div className="flex-grow text-center">
-              <Title level={4}>{user?.numberOfPosts === 0 ? "N/A" : user?.numberOfPosts}</Title>
+              <Title level={4}>{user?.numberOfPosts === 0 ? "N/A" : currentUser?.numberOfPosts}</Title>
               <Typography.Text>Posts</Typography.Text>
             </div>
             <div className="flex-grow text-center">
@@ -84,6 +88,9 @@ const ProfileHeader = ({ user, success, fetching }: {user:IUser, success: boolea
             </div>
           </div>
         </div>
+        {showEditPopup && (
+          <ProfileEditPopup userId={currentUser?._id || ''} show={showEditPopup} setShow={setShowEditPopup}/>
+        )}
       </Card>
     );
 };
