@@ -27,7 +27,7 @@ const LeftSidebar = ({className=''}):JSX.Element => {
             </Paragraph>
             <Paragraph strong>
               Location:{" "}
-              <Typography.Text className="font-normal">San Francisco, CA </Typography.Text>
+              <Typography.Text className="font-normal">{currentUser?.location ? currentUser?.location : "Unknown"} </Typography.Text>
             </Paragraph>
             <Paragraph strong>
               Member since:{" "}
@@ -39,14 +39,14 @@ const LeftSidebar = ({className=''}):JSX.Element => {
             </Paragraph>
 
             {/* Follow & Message Buttons */}
-            <div className="mt-12">
+            {/* <div className="mt-12">
               <Button type="primary" className="w-full">
                 Follow
               </Button>
               <Button className="mt-2 w-full">
                 Message
               </Button>
-            </div>
+            </div> */}
           </Card>
         </div>
     );

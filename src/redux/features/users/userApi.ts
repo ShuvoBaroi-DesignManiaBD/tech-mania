@@ -1,9 +1,10 @@
 // "use client";
 import { baseAPI } from "@/redux/api/baseApi";
-import { IPost, IUser, TResponse } from "@/types";
+import { IPost, IRegisterData, IUser, TPaymentInfo, TResponse } from "@/types";
 import { setUserData } from "../auth/authSlice";
+import { setSubscriptionPlan } from "../subscription/subscriptionSlice";
 
-const userApi = baseAPI.injectEndpoints({
+export const userApi = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<TResponse<IPost[]>, { page?: number; limit?: number }>({
       query: ({ page = 1, limit = 6 }) => ({
@@ -13,7 +14,7 @@ const userApi = baseAPI.injectEndpoints({
       providesTags: ["allUsers"],
     }),
     getSuggestedUsers: builder.query<TResponse<IUser[]>, { id: string, page?: number; limit?: number }>({
-      query: ({ id, page = 1, limit = 6 }) => ({
+      query: ({ id, page = 1, limit = 12 }) => ({
         url: `/users/suggested-users?id=${id}&page=${page}&limit=${limit}`,
         method: "GET",
       }),
@@ -29,9 +30,10 @@ const userApi = baseAPI.injectEndpoints({
         try {
           const {data} = await queryFulfilled; // Wait for the query to fulfill
           // console.log("Data:", data);
-    
+          const verified = data.data.verified === true ? "Premium" : "Free";
           // Dispatch the data directly to Redux store without an arrow function wrapper
           dispatch(setUserData(data.data)); // Assuming `data.data` is IUser
+          dispatch(setSubscriptionPlan(verified));
         } catch (error) {
           console.error("Error fetching user posts:", error);
         }
@@ -65,6 +67,18 @@ const userApi = baseAPI.injectEndpoints({
     >({
       query: ({ userId, updatedData }) => ({
         url: `users/update-user-profile/${userId}`,
+        method: "PATCH",
+        body: updatedData,
+      }),
+      invalidatesTags: ["currentUser", "user"], // This invalidates the cache of posts to refetch them after the update
+    }),
+
+    verifyAUser: builder.mutation<
+      void,
+      { userId: string; updatedData: Partial<TPaymentInfo> }
+    >({
+      query: ({ userId, updatedData }) => ({
+        url: `users/verify-user/${userId}`,
         method: "PATCH",
         body: updatedData,
       }),
@@ -109,17 +123,27 @@ const userApi = baseAPI.injectEndpoints({
       }),
       invalidatesTags: ["posts"],
     }),
+
+    registerUser: builder.mutation<TResponse<IRegisterData>, IRegisterData>({
+      query: (data) => ({
+        url: `/users/create-user`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
 export const {
   useAddAUserMutation,
+  useRegisterUserMutation,
   useGetAUserQuery,
   useGetCurrentUserQuery,
   useGetAllUsersQuery,
   useGetSuggestedUsersQuery,
   useDeleteAUserMutation,
   useUpdateAUserMutation,
+  useVerifyAUserMutation,
   useUpdateAUserProfileMutation,
   useFollowAUserMutation,
   useUnFollowAUserMutation

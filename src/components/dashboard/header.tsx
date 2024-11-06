@@ -1,23 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
-  Avatar,
   Button as AntButton,
-  Dropdown,
   Layout,
   Menu,
   Space,
   theme,
-  Typography,
 } from "antd";
 import {
   AlignRightOutlined,
-  DownOutlined,
-  LogoutOutlined,
   MoonOutlined,
-  SettingOutlined,
   SunOutlined,
-  TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -30,17 +23,15 @@ import {
   selectCurrentDevice,
 } from "@/redux/features/device/deviceSlice";
 import { setOffCanvasState } from "@/redux/features/ui/offCanvas/offCanvasSlice";
-import CustomLink from "../ui/CustomLink";
 import Logo from "../ui/Logo";
 import OffCanvas from "../ui/shared/navbar/mobileNav/OffCanvas";
 import { usePathname } from "next/navigation";
 import dashboardTopNavItems from "../ui/shared/navbar/dashboardNav/dashboardTopNavItems";
 import TopLoadingBar from "../ui/shared/TopLoadingBar";
-import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
-import Button from "../ui/button/Button";
-import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
-import Title from "antd/es/typography/Title";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { IUser } from "@/types";
+import UserDropdown from "../ui/dropdowns/UserDropdown";
+import MenuItems from "./MenuItems";
 import { navigate } from "@/actions/navigate";
 
 const { Header: HeaderPart } = Layout;
@@ -49,7 +40,8 @@ const Header = ({ className = "" }: { className?: string }) => {
   const path = usePathname();
   const isMobile = useAppSelector(selectCurrentDevice);
   const currentUser: IUser | null = useAppSelector(selectCurrentUser);
-  const profilePhoto = currentUser?.profilePicture || currentUser?.name[0].toUpperCase() || <UserOutlined />;
+  console.log(currentUser?.name[0].toUpperCase());
+  
   const [pathname, setPathName] = useState(path?.substring(1) || "dashboard");
   const dispatch = useAppDispatch();
   const currentTheme = useAppSelector(selectCurrentTheme);
@@ -81,63 +73,63 @@ const Header = ({ className = "" }: { className?: string }) => {
     };
   }, [dispatch]);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("?logout=true");
-  }
+  // const handleLogout = () => {
+  //   dispatch(logout());
+  //   navigate("?logout=true");
+  // }
 
-  const menuItems = [
-    {
-      key: "user-info",
-      label: (
-        <div
-          className="flex items-center justify-start gap-3 p-3 shadow-sm !border-0 !rounded-none"
-          style={{borderColor: TokenProvider().colorBorder}}
-        >
-          <Avatar size={52} src={currentUser?.profilePicture} />
-          <div className="flex flex-col !gap-0">
-            <Title level={5} className="mb-0 !text-[15px] !leading-[15px]" style={{color: TokenProvider().colorText}}>
-              {currentUser?.name}
-            </Title>
-            <Typography.Text type="secondary" className="!text-sm">
-             {currentUser?.email}
-            </Typography.Text>
-          </div>
-        </div>
-      ),
-    },
-    {
-      type: "divider",
-    },
-    {
-      key: "profile",
-      label: <CustomLink href="/profile">Profile</CustomLink>,
-      icon: <UserOutlined />,
-    },
-    {
-      key: "groups",
-      label: <CustomLink href="/groups">Groups</CustomLink>, // Full text label
-      icon: <TeamOutlined />,
-    },
-    {
-      key: "settings",
-      label: <CustomLink href="/settings">Settings</CustomLink>, // Full text label
-      icon: <SettingOutlined />,
-    },
-    {
-      key: "logout",
-      label: (
-        <Button
-          color="danger"
-          onClick={() => handleLogout()}
-          className="w-full !bg-red-500 border-0 hover:border-0 hover:!text-white"
-          icon={<LogoutOutlined />}
-        >
-          Logout
-        </Button>
-      ), // Full text label
-    },
-  ];
+  // const menuItems = [
+  //   {
+  //     key: "user-info",
+  //     label: (
+  //       <div
+  //         className="flex items-center justify-start gap-3 p-3 shadow-sm !border-0 !rounded-none"
+  //         style={{borderColor: TokenProvider().colorBorder}}
+  //       >
+  //         <Avatar size={52} src={currentUser?.profilePicture} />
+  //         <div className="flex flex-col !gap-0">
+  //           <Title level={5} className="mb-0 !text-[15px] !leading-[15px]" style={{color: TokenProvider().colorText}}>
+  //             {currentUser?.name}
+  //           </Title>
+  //           <Typography.Text type="secondary" className="!text-sm">
+  //            {currentUser?.email}
+  //           </Typography.Text>
+  //         </div>
+  //       </div>
+  //     ),
+  //   },
+  //   {
+  //     type: "divider",
+  //   },
+  //   {
+  //     key: "profile",
+  //     label: <CustomLink href="/profile">Profile</CustomLink>,
+  //     icon: <UserOutlined />,
+  //   },
+  //   {
+  //     key: "groups",
+  //     label: <CustomLink href="/groups">Groups</CustomLink>, // Full text label
+  //     icon: <TeamOutlined />,
+  //   },
+  //   {
+  //     key: "settings",
+  //     label: <CustomLink href="/settings">Settings</CustomLink>, // Full text label
+  //     icon: <SettingOutlined />,
+  //   },
+  //   {
+  //     key: "logout",
+  //     label: (
+  //       <Button
+  //         color="danger"
+  //         onClick={() => handleLogout()}
+  //         className="w-full !bg-red-500 border-0 hover:border-0 hover:!text-white"
+  //         icon={<LogoutOutlined />}
+  //       >
+  //         Logout
+  //       </Button>
+  //     ), // Full text label
+  //   },
+  // ];
 
   const { token } = theme.useToken();
 
@@ -146,30 +138,6 @@ const Header = ({ className = "" }: { className?: string }) => {
     dispatch(setTheme(undefined));
   };
 
-  // User Avatar and Dropdown for desktop
-  const renderUserDropdown = () => (
-    <Dropdown
-      menu={{ items: menuItems }}
-      overlayClassName="max-w-content"
-      placement="bottomRight"
-      arrow={{ pointAtCenter: true }}
-    >
-      <Avatar
-        style={{
-          border: `3px solid ${token?.colorPrimary}`,
-          backgroundColor: token.colorPrimary,
-          fontSize: "24px",
-          verticalAlign: "middle",
-          width: "44px",
-          height: "44px",
-          cursor: "pointer",
-        }}
-        src={ profilePhoto }
-        icon={<DownOutlined size={14} className="z-50"></DownOutlined>}
-      >
-      </Avatar>
-    </Dropdown>
-  );
 
   return (
     <>
@@ -214,16 +182,16 @@ const Header = ({ className = "" }: { className?: string }) => {
             />
 
             {/* User Profile Section */}
-            {isMobile ? (
+            {!currentUser ? (
               <AntButton
                 size="small"
                 type="default"
                 shape="circle"
                 icon={<UserOutlined />}
-                onClick={toggleTheme}
+                onClick={() => navigate("/login")}
               />
             ) : (
-              renderUserDropdown()
+              <UserDropdown></UserDropdown>
             )}
 
             {/* Off-Canvas Button for Mobile Navigation */}

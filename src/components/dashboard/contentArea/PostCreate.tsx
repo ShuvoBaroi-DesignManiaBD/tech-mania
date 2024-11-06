@@ -21,13 +21,17 @@ import Emoji from "quill-emoji";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 import Image from "next/image";
 import Link from "next/link";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 import { useAppSelector } from "@/redux/hooks";
-import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import {
+  selectCurrentUser,
+  selectCurrentUserData,
+} from "@/redux/features/auth/authSlice";
 import { CldUploadButton } from "next-cloudinary";
 import { showMessage } from "@/components/ui/message";
 import { TPostCategory } from "@/types";
 import { useAddAPostMutation } from "@/redux/features/posts/postApi";
+import CheckoutModel from "@/app/(WithUserDashboardLayout)/pricing/component/CheckoutModel";
 
 const ReactQuill = dynamic(
   () => import("react-quill").then((mod) => mod.default),
@@ -41,18 +45,30 @@ if (typeof window !== "undefined" && GlobalQuill) {
 const PostCreate = () => {
   const [addAPost, { isLoading, data }] = useAddAPostMutation();
   const currentUser = useAppSelector(selectCurrentUser);
+  const currentUserData = useAppSelector(selectCurrentUserData);
   const [content, setContent] = useState<string>("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [videoURL, setVideoURL] = useState<string>("");
   const [fileList, setFileList] = useState<any[]>([]);
   const [category, setCategory] = useState<string>("");
   const [premium, setPremimum] = useState<boolean>(false);
 
+  const profilePhoto = currentUser?.profilePicture;
+  const fallbackInitial = currentUser?.name
+    ? currentUser.name[0].toUpperCase()
+    : null;
   const handleChange = (value: string) => {
     setContent(value);
   };
 
   const handlePopup = () => {
+    if (
+      currentUserData?.verified === false &&
+      currentUserData?.postCredit === 0
+    ) {
+      return setIsModalVisible(true);
+    }
     setShowPopup(!showPopup);
   };
 
@@ -147,18 +163,17 @@ const PostCreate = () => {
                 height: "52px",
               }}
               src={
-                <Image
-                  src={
-                    currentUser?.profilePicture ||
-                    (currentUser?.name[0].toUpperCase() as string)
-                  }
-                  alt="profile_photo"
-                  width={52}
-                  height={52}
-                />
+                profilePhoto && (
+                  <Image
+                    src={currentUser?.profilePicture || ""}
+                    alt="profile_photo"
+                    width={52}
+                    height={52}
+                  />
+                )
               }
             >
-              S
+              {profilePhoto ? null : fallbackInitial}
             </Avatar>
           </Link>
           <Input
@@ -341,6 +356,10 @@ const PostCreate = () => {
           </Form>
         </Card>
       </Modal>
+      <CheckoutModel
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      ></CheckoutModel>
     </div>
   );
 };

@@ -9,9 +9,12 @@ export interface IUser {
   email: string;
   phone?: string;
   bio?: string;
+  location?: string;
   password: string;
   profilePicture?: string;
   verified: boolean;
+  postCredit?: number;
+  followCredit?: number;
   isDeleted: boolean;
   isBlocked: boolean;
   role: TUserRole;
@@ -31,3 +34,10 @@ export interface IUpdateProfile {
   phone?: string;
   profilePicture?: string;
 };
+
+export interface IRegisterData {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+}

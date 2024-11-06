@@ -20,11 +20,15 @@ import UserCardSkeleton from "../ui/Skeletons/UserCardSkeleton";
 import { MdVerified } from "react-icons/md";
 import { IUser } from "@/types";
 import Link from "next/link";
-import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
+import CheckoutModel from "@/app/(WithUserDashboardLayout)/pricing/component/CheckoutModel";
+import { useState } from "react";
 
 const RightSidebar = () => {
   const dispatch = useAppDispatch();
   const currentUser = useAppSelector(selectCurrentUser);
+  const currentUserData = useAppSelector(selectCurrentUserData);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { data: userData, refetch } = useGetCurrentUserQuery(
     currentUser?._id as string
   );
@@ -42,6 +46,12 @@ const RightSidebar = () => {
   const { token } = theme.useToken();
 
   const handleFollow = (userId: string) => {
+    if (
+      currentUserData?.verified === false &&
+      currentUserData?.followCredit === 0
+    ) {
+      return setIsModalVisible(true);
+    }
     followAUser({ userId: userId });
     refetch();
   };
@@ -66,7 +76,7 @@ const RightSidebar = () => {
           <Input.Search placeholder="Search..." className="mb-6" />
           <Title level={4}>People you may like</Title>
           <div
-            className={`flex flex-col divide-y-2 divide-dark-textSecondary/15`}
+            className={`flex flex-col divide-y-2 divide-dark-textSecondary/15 overflow-y-scroll scrollbar-hide h-[75vh]`}
           >
             {!isFetching &&
               isSuccess &&
@@ -76,7 +86,7 @@ const RightSidebar = () => {
                   className="flex items-center justify-between"
                 >
                   <div className="flex items-center gap-2 py-3">
-                    <Link href={`/dashboard/${user?._id}`}>
+                    <Link href={`/user/${user?._id}`}>
                       <Avatar
                         src={user.profilePicture}
                         icon={user.profilePicture || <UserOutlined />}
@@ -86,10 +96,8 @@ const RightSidebar = () => {
                     </Link>
                     <div>
                       <div className="font-semibold !flex items-center gap-1">
-                        <Typography.Text className="leading-[14px] !text-sm" >
-                          <Link href={`/dashboard/${user._id}`}>
-                            {user?.name}
-                          </Link>
+                        <Typography.Text className="leading-[14px] !text-sm">
+                          <Link href={`/user/${user._id}`}>{user?.name}</Link>
                         </Typography.Text>{" "}
                         <span>
                           {user?.verified && (
@@ -129,6 +137,10 @@ const RightSidebar = () => {
                 <UserCardSkeleton key={i}></UserCardSkeleton>
               ))}
           </div>
+          <CheckoutModel
+            isModalVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+          ></CheckoutModel>
         </div>
       </Sider>
     </div>

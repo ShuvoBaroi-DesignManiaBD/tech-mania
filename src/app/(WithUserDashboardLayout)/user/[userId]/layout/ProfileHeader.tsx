@@ -8,6 +8,8 @@ import { useGetAUserQuery } from "@/redux/features/users/userApi";
 const ProfileHeader = ({userId=''}: {userId?: string}) => {
   const { data } = useGetAUserQuery(userId || '');
   const userData = data?.data;
+  const profilePhoto = userData?.profilePicture;
+    const fallbackInitial = userData?.name ? userData?.name[0].toUpperCase() : null;
   // dispatch(setUserData(data?.data as IUser));
     
     return (
@@ -27,9 +29,12 @@ const ProfileHeader = ({userId=''}: {userId?: string}) => {
               <Avatar
                 size={80}
                 src={userData?.profilePicture}
-                className="border-2 border-gray-300"
-                alt={`Shuvo's Profile`}
-              />
+                className="border-2 border-gray-300 !text-[50px]"
+                alt={`${userData?.name}'s Profile`}
+              style={{ backgroundColor: TokenProvider().colorBgElevated }}
+            >
+              {profilePhoto ? null : fallbackInitial}
+            </Avatar>
             </div>
 
             {/* User Info */}

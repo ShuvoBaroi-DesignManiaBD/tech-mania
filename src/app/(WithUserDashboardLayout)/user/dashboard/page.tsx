@@ -64,11 +64,17 @@ const Page = () => {
   const [hasMore, setHasMore] = useState(true); // Track if more posts are available
   const [filter, setFilter] = useState("All"); // Filter state
   const [sortOrder, setSortOrder] = useState("Most Recent"); // Sort state
-  const [searchTerm, setSearchTerm] = useState<string>(''); // Search state
+  const [searchTerm, setSearchTerm] = useState<string>(""); // Search state
   const observer = useRef<IntersectionObserver | null>(null); // Ref for IntersectionObserver
 
   // Fetch posts based on page and limit
-  const { data, isFetching, isSuccess } = useGetAllPostsQuery({ page, limit: 3, category: filter === 'All' ? null : filter, sort: sortOrder, searchTerm: searchTerm.length > 0 ? searchTerm : null });
+  const { data, isFetching, isSuccess } = useGetAllPostsQuery({
+    page,
+    limit: 3,
+    category: filter === "All" ? null : filter,
+    sort: sortOrder,
+    searchTerm: searchTerm.length > 0 ? searchTerm : null,
+  });
 
   // Effect to append new posts to the state when data changes
   useEffect(() => {
@@ -92,7 +98,7 @@ const Page = () => {
     if (hasMore && !isFetching) {
       setLoading(true);
       setPage((prevPage) => prevPage + 1); // Increment page to fetch more posts
-    } else if(isSuccess){
+    } else if (isSuccess) {
       setLoading(false);
     }
   };
@@ -107,8 +113,8 @@ const Page = () => {
         setHasMore(false); // Stop loading more if no new posts
       }
     }
-    if(searchTerm.length === 0) {
-      setSearchTerm('');
+    if (searchTerm.length === 0) {
+      setSearchTerm("");
       setPage(1);
     }
   }, [data, searchTerm.length]);
@@ -137,12 +143,12 @@ const Page = () => {
 
   // Search handler (debounced for better performance)
   const handleSearch = debounce((value: string) => {
-    if(value.length > 2) {
+    if (value.length > 2) {
       setPosts([]);
-    setPage(1);
+      setPage(1);
       console.log(value);
-      
-     return  setSearchTerm(typeof value === "string" ? value : '');
+
+      return setSearchTerm(typeof value === "string" ? value : "");
     }
   }, 300);
 
@@ -185,7 +191,7 @@ const Page = () => {
           placeholder="Search for tips, guides, or tutorials..."
           prefix={<SearchOutlined />}
           allowClear
-          onClear={() => setSearchTerm('')}
+          onClear={() => setSearchTerm("")}
           className="max-w-sm"
           style={{ color: TokenProvider().colorText }}
           styles={{ input: { color: TokenProvider().colorText } }}
@@ -193,10 +199,7 @@ const Page = () => {
         />
 
         <Space>
-          <Dropdown
-            overlay={filterMenu}
-            trigger={["click"]}
-          >
+          <Dropdown overlay={filterMenu} trigger={["click"]}>
             <Button icon={<FilterOutlined />}>
               Filter: {filter} <DownOutlined />
             </Button>
@@ -234,24 +237,25 @@ const Page = () => {
         </DynamicInfiniteScroll>
       </div> */}
       <div className="grid grid-cols-1 gap-8 pb-32">
-  {/* Show the posts or skeleton while fetching */}
-  {!isFetching ? (
-    posts.length ? (
-      posts.map((post) => <PostCard key={post._id} post={post} />)
-    ) : (
-      <NotFound message="No posts found!" className="-mt-20" />
-    )
-  ) : (
-    <PostCardSkeleton repeat={[1, 2]} />
-  )}
+        {/* Show the posts or skeleton while fetching */}
+        {!isFetching ? (
+          posts.length ? (
+            posts.map((post) => <PostCard key={post._id} post={post} />)
+          ) : (
+            <NotFound message="No posts found!" className="-mt-20" />
+          )
+        ) : (
+          <PostCardSkeleton repeat={[1, 2]} />
+        )}
 
-  {/* Dummy div to trigger IntersectionObserver */}
-  {hasMore && !isFetching && <div id="last-post" style={{ height: "20px" }} />}
+        {/* Dummy div to trigger IntersectionObserver */}
+        {hasMore && !isFetching && (
+          <div id="last-post" style={{ height: "20px" }} />
+        )}
 
-  {/* Loading Spinner for ongoing requests */}
-  {loading && <Spin />}
-</div>
-
+        {/* Loading Spinner for ongoing requests */}
+        {loading && <Spin />}
+      </div>
     </div>
   );
 };

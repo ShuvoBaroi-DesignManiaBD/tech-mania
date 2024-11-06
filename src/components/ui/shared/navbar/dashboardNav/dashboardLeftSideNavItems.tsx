@@ -19,22 +19,22 @@ type TChildItem = {
 const dashboardNavItems: TChildItem[] = [
   {
     key: "dashboard",
-    label: <CustomLink href="/dashboard">Dashboard</CustomLink>,
+    label: <CustomLink href="/user/dashboard">Dashboard</CustomLink>,
     icon: <HomeOutlined />
   },
   {
     key: "profile",
-    label: <CustomLink href="/dashboard/profile">Profile</CustomLink>,
+    label: <CustomLink href="/user/dashboard/profile">Profile</CustomLink>,
     icon: <UserOutlined />
   },
   {
     key: "groups",
-    label: <CustomLink href="/dashboard/groups">Groups</CustomLink>,
+    label: <CustomLink href="/user/dashboard/groups">Groups</CustomLink>,
     icon: <TeamOutlined />
   },
   { type: "divider" },
   { type: "group" },
-  { key: "4", icon: <FaHandHoldingDollar />, label: <CustomLink href="pricing">Pricing</CustomLink> },
+  { key: "4", icon: <FaHandHoldingDollar />, label: <CustomLink href="/pricing">Pricing</CustomLink> },
   { key: "5", icon: <TeamOutlined />, label: "About Us" },
   { key: "6", icon: <BiSupport />, label: "Support" },
 ];

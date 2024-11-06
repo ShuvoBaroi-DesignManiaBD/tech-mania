@@ -33,7 +33,12 @@ const Login = () => {
         // const user = verifyToken(res?.token || '') as IUser;
         dispatch(setUser({ user: res.data, token: res.token }));
         showMessage({ type: "success", message: "Login successful!" });
-        return router.push("/dashboard");
+        console.log('role', res?.data?.role);
+        
+        if(res?.data?.role === "admin"){
+          return router.push("/admin/dashboard");
+        }
+        return router.push("/user/dashboard");
       } else {
         showMessage({ type: "error", message: res?.message || "Login failed" });
         throw new Error(res.message || "Login failed");
@@ -50,7 +55,7 @@ const Login = () => {
   return (
     <Form onFinish={submitForm} labelCol={{ span: 24 }}>
       <Form.Item
-        label={<p style={{ color: TokenProvider()?.colorText }}>Password</p>}
+        label={<p style={{ color: TokenProvider()?.colorText }}>Your email</p>}
         name="email"
         className="!mb-4"
         rules={[

@@ -9,6 +9,7 @@ import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { useAddDownvoteMutation, useAddUpvoteMutation } from "@/redux/features/vote/voteApi";
 import { voteType } from "@/constant";
 import { TVoteType } from "@/types/vote.type";
+import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 
 const CommentItem = ({
   comment
@@ -46,11 +47,14 @@ const CommentItem = ({
       {/* Main Comment */}
       <div className="flex items-start justify-between mb-4 p-3 rounded-xl" style={{backgroundColor: token?.secondaryBorder}}>
         <div className="flex gap-2 items-start">
-          <Avatar
+        <Avatar
             src={comment?.author?.profilePicture}
-            icon={!comment?.author.profilePicture && <UserOutlined />}
             className="mr-2 z-10 relative"
-          />
+            alt={`${currentUser?.name}'s Profile`}
+            style={{ backgroundColor: TokenProvider().colorBgElevated }}
+          >
+            {comment?.author?.profilePicture ? null : comment?.author?.name[0].toUpperCase()}
+          </Avatar>
         <span className='w-16 h-[68%] border-l-2 absolute left-8 top-5 rounded-lg' style={{borderColor: token.secondaryBorder}}></span>
           <div>
             <Typography.Text strong>

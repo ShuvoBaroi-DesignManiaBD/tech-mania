@@ -20,15 +20,15 @@ export type menuItemType = 'submenu' | 'otherType';
 const dashboardTopNavItems: MenuItemType[] = [
   {
     key: "dashboard",
-    icon: <Link href="/dashboard"><HomeOutlined className="[&&_svg]:w-[70px] [&&_svg]:h-7 text-center pl-3"/></Link>
+    icon: <Link href="/user/dashboard"><HomeOutlined className="[&&_svg]:w-[70px] [&&_svg]:h-7 text-center pl-3"/></Link>
   },
   {
     key: "profile",
-    icon: <Link href="/dashboard/profile"><UserOutlined className="[&&_svg]:w-[70px] [&&_svg]:h-7 text-center pl-3"/></Link>
+    icon: <Link href="/user/profile"><UserOutlined className="[&&_svg]:w-[70px] [&&_svg]:h-7 text-center pl-3"/></Link>
   },
   {
     key: "groups",
-    icon: <Link href="/dashboard/groups"><TeamOutlined className="[&&_svg]:w-[70px] [&&_svg]:h-7 text-center pl-3"/></Link>
+    icon: <Link href="/user/groups"><TeamOutlined className="[&&_svg]:w-[70px] [&&_svg]:h-7 text-center pl-3"/></Link>
   },
 ];
 

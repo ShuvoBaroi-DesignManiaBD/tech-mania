@@ -6,6 +6,8 @@ import deviceSlice from "./features/device/deviceSlice";
 import offCanvasSlice from "./features/ui/offCanvas/offCanvasSlice";
 import authSlice from "./features/auth/authSlice";
 import postsSlice from "./features/posts/postSlice";
+import subscriptionSlice from "./features/subscription/subscriptionSlice";
+import checkoutModalSlice from "./features/ui/checkoutModal/checkoutModalSlice";
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -24,6 +26,8 @@ export const store = configureStore({
     offCanvas: offCanvasSlice,
     auth: persistedAuthReducer,
     posts: postsSlice,
+    subscription: subscriptionSlice,
+    checkoutModal: checkoutModalSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

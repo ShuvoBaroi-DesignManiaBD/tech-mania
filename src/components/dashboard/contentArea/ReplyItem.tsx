@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/components/ui/button/Button";
 import { voteType } from "@/constant";
+import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { useAddDownvoteMutation, useAddUpvoteMutation } from "@/redux/features/vote/voteApi";
 import { useAppSelector } from "@/redux/hooks";
@@ -52,9 +53,12 @@ const ReplyItem = ({
         <div className="w-4/5 flex gap-2 items-start">
           <Avatar
             src={reply?.author?.profilePicture}
-            icon={!reply?.author.profilePicture && <UserOutlined />}
             className="mr-2 z-10 relative"
-          />
+            alt={`${currentUser?.name}'s Profile`}
+            style={{ backgroundColor: TokenProvider().colorBgElevated }}
+          >
+            {reply?.author?.profilePicture ? null : reply?.author?.name[0].toUpperCase()}
+          </Avatar>
         <span className='w-16 h-[68%] border-l-2 absolute left-8 top-5 rounded-lg' style={{borderColor: token.secondaryBorder}}></span>
           <div>
             <Typography.Text strong>

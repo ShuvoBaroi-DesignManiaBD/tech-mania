@@ -1,13 +1,22 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode} from "react";
 import Header from "@/components/dashboard/header";
 import LeftSidebar from "@/components/dashboard/LeftSidebar";
 import RightSidebar from "@/components/dashboard/RightSidebar";
 import ContentArea from "@/components/dashboard/contentArea/ContentArea";
 import { Layout as AntdLayout } from "antd";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
+// import CheckoutModel from "./pricing/component/CheckoutModel";
 
+// const CheckoutModel = dynamic(() => import("./pricing/component/CheckoutModel"), { ssr: false });
 const Layout = ({children}:{children:ReactNode}) => {
+  // const isModalShow = useAppSelector(selectIsShowCheckoutModal);
+  // console.log(isModalShow);
+  //   const [displayModal, setDisplayModal] = useState(false);
+
+  //   useEffect(() => {
+  //     setDisplayModal(isModalShow);
+  //   }, [isModalShow]);
     return (
       <AntdLayout style={{backgroundColor:TokenProvider()?.colorBgBase}}>
       <Header className="px-8"></Header>
@@ -24,7 +33,8 @@ const Layout = ({children}:{children:ReactNode}) => {
         </Layout> */}
   
         {/* Right Sidebar */}
-        <RightSidebar></RightSidebar>
+        {/* <RightSidebar></RightSidebar> */}
+        {/* {displayModal && <CheckoutModel></CheckoutModel>} */}
       </AntdLayout>
       </AntdLayout>
         

@@ -22,6 +22,8 @@ const CommentSection = ({ postId }: { postId: string }) => {
   const [commentText, setCommentText] = useState("");
   const [, setShowEmojiPicker] = useState(false);
 
+  const profilePhoto = currentUser?.profilePicture;
+    const fallbackInitial = currentUser?.name ? currentUser.name[0].toUpperCase() : null;
   // const handleCollapse = () => setIsExpanded(false);
 
   const handleCommentChange = (e) => setCommentText(e.target.value);
@@ -66,8 +68,12 @@ const CommentSection = ({ postId }: { postId: string }) => {
         <Avatar
           src={currentUser?.profilePicture}
           size="large"
-          className="mr-3"
-        />
+          className="mr-3 !text-2xl"
+          alt={`${currentUser?.name}'s Profile`}
+          style={{ backgroundColor: TokenProvider().colorPrimary }}
+        >
+          {profilePhoto ? null : fallbackInitial}
+        </Avatar>
         <div className="flex-1 cursor-text">
           <div className="flex gap-2">
             <TextArea

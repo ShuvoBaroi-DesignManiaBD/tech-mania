@@ -1,10 +1,10 @@
 "use client";
 import { baseAPI } from "@/redux/api/baseApi";
-import { TResponse, TSignInData } from "@/types";
+import { IUser, TResponse, TSignInData } from "@/types";
 
 const authApi = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<TResponse<TSignInData>, TSignInData>({
+    login: builder.mutation<TResponse<IUser>, TSignInData>({
       query: (data) => ({
         url: `/auth/signin`,
         method: "POST",

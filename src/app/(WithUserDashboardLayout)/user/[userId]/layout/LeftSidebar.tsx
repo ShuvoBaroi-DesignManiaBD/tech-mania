@@ -53,7 +53,7 @@ const LeftSidebar = ({userId, className=''}:{userId?: string, className?: string
             </Paragraph>
             <Paragraph strong>
               Location:{" "}
-              <Typography.Text className="font-normal">San Francisco, CA </Typography.Text>
+              <Typography.Text className="font-normal">{userData?.location || "Unknown"} </Typography.Text>
             </Paragraph>
             <Paragraph strong>
               Member since:{" "}

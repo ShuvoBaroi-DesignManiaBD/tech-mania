@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 // const AuthRoutes = ["/login", "/register"];
-const privateRoutes = ["/dashboard", "/dashboard/profile"];
+const privateRoutes = ["/dashboard", "/dashboard/profile", "/user","/user/profile", "/user/dashboard"];
 
 function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -46,6 +46,8 @@ function middleware(request: NextRequest) {
 // Configuration for matching paths
 export const config = {
   matcher: [
+    "/user",
+    "/admin",
     "/profile",
     "/dashboard/profile",
     "/profile/:page*",

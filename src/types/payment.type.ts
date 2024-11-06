@@ -1,11 +1,21 @@
 export type TPaymentMethod = 'SSL' | 'STRIPE' | 'PAYPAL';
+export const TPaymentMethods = {
+  ssl: 'SSL',
+  stripe: 'STRIPE',
+  paypal: 'PAYPAL'
+} as const;
+
+export const status = {
+  active: 'active',
+  inactive: 'inactive'
+} as const;
 
 export type TPaymentInfo = {
-    method: TPaymentMethod;
+    method: 'SSL' | 'STRIPE' | 'PAYPAL';
     subscriptionStatus: 'active' | 'inactive';
     subscriptionStartDate?: Date;
     subscriptionEndDate?: Date;
-    cardInfo: ICardInfo
+    cardInfo: ICardInfo | null;
   }
 
   export type TPaymentRequest = {

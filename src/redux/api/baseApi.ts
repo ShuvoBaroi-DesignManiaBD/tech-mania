@@ -1,5 +1,5 @@
 import { showMessage } from "@/components/ui/message";
-import envConfig from "@/config/envConfig";
+import envConfig from "@/config";
 import { BaseQueryFn, createApi, FetchArgs, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { logout, setUser } from "../features/auth/authSlice";
