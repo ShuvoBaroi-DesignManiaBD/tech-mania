@@ -22,7 +22,7 @@ const Page = () => {
   const [limit, setLimit] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddPostModalOpen, setIsAddPostModalOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
+  const [selectedPost, setSelectedPost] = useState<IPost | null>();
   const { data, isFetching } = useGetAllPostsQuery({
     page,
     limit,

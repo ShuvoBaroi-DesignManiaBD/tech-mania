@@ -1,7 +1,3 @@
-Here’s the updated `README.md`:
-
----
-
 # Tech Mania
 
 Welcome to **Tech Mania**, a comprehensive platform designed for tech enthusiasts to explore tips, tricks, tutorials, and expert recommendations. This dynamic web application enables users to share insights, troubleshoot tech issues, and stay up-to-date with the latest in technology.
