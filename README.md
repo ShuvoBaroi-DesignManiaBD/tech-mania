@@ -148,6 +148,7 @@ pnpm lint --fix
 - **Next.js**: React framework for server-side rendering and static generation.
 - **Redux Toolkit**: State management for consistent and maintainable app structure.
 - **Tailwind CSS**: Utility-first CSS framework for custom styling.
+- **Ant Design**: React component library.
 - **React Hook Form**: Efficient form handling with validation.
 - **Cloudinary**: Media storage and optimization.
 - **Stripe / SSLCommerz**: Payment gateways for premium subscriptions.
