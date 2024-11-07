@@ -1,11 +1,10 @@
 "use client";
 import { ReactNode} from "react";
 import Header from "@/components/dashboard/header";
-import LeftSidebar from "@/components/dashboard/LeftSidebar";
-import RightSidebar from "@/components/dashboard/RightSidebar";
 import ContentArea from "@/components/dashboard/contentArea/ContentArea";
 import { Layout as AntdLayout } from "antd";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
+import LeftSidebar from "./admin/layout/LeftSidebar";
 // import CheckoutModel from "./pricing/component/CheckoutModel";
 
 // const CheckoutModel = dynamic(() => import("./pricing/component/CheckoutModel"), { ssr: false });
@@ -25,7 +24,7 @@ const Layout = ({children}:{children:ReactNode}) => {
         <LeftSidebar></LeftSidebar>
   
         {/* Main Content */}
-        <ContentArea>{children}</ContentArea>
+        <ContentArea width="100%" className="!p-10">{children}</ContentArea>
         {/* <Layout className="overflow-y-scroll scrollbar-hide" style={{backgroundColor:token?.colorBgBase}}>
           <Content className="w-[1080px] mx-auto h-full py-8 px-6" style={{backgroundColor:token?.colorBgBase}}>
             {children}

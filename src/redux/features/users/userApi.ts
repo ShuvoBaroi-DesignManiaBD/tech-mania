@@ -58,7 +58,7 @@ export const userApi = baseAPI.injectEndpoints({
         method: "PATCH",
         body: updatedPost,
       }),
-      invalidatesTags: ["posts"], // This invalidates the cache of posts to refetch them after the update
+      invalidatesTags: ["posts", "allUsers", "currentUser"], // This invalidates the cache of posts to refetch them after the update
     }),
 
     updateAUserProfile: builder.mutation<

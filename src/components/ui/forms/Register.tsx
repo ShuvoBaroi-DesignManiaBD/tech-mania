@@ -36,7 +36,7 @@ const Register = () => {
         email: values.email,
         password: values.password,
       };
-      const res = await register(userData).unwrap();
+      const res = await register(userData as IRegisterData).unwrap();
 
       if (res && res.success) {
         dispatch(setUser({ user: res.data, token: res.token }));

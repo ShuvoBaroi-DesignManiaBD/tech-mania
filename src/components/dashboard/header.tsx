@@ -155,7 +155,7 @@ const Header = ({ className = "" }: { className?: string }) => {
           <Logo width={180} height={40} />
 
           {/* Main Navigation for Desktop */}
-          {!isMobile && (
+          {!isMobile && !path.includes("/admin") && (
             <Menu
               mode="horizontal"
               selectedKeys={[pathname.length > 0 ? pathname : "dashboard"]}

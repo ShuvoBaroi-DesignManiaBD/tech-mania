@@ -116,7 +116,7 @@ const RightSidebar = ({ className = "" }): JSX.Element => {
             ))}
 
       {/* Edit Post Modal */}
-      {selectedPost && showPopup && <PostEdit post={selectedPost}  showPopup={showPopup} setShowPopup={setShowPopup} />}
+      {selectedPost && showPopup && <PostEdit postData={selectedPost}  showPopup={showPopup} setShowPopup={setShowPopup} />}
     </div>
   );
 };

@@ -47,7 +47,7 @@ const PostCard = dynamic(() => import("@/components/ui/cards/PostCard"), {
   ssr: false,
 });
 const PostCreate = dynamic(
-  () => import("@/components/dashboard/contentArea/PostCreate"),
+  () => import("@/components/dashboard/contentArea/PostCreateSection"),
   { ssr: false }
 );
 // const DynamicInfiniteScroll = dynamic(

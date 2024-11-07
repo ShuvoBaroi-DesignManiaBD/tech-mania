@@ -23,7 +23,7 @@ import { UploadOutlined } from "@ant-design/icons";
 import { CldUploadButton } from "next-cloudinary";
 import { showMessage } from "@/components/ui/message";
 import { IPost, TPostCategory } from "@/types";
-import { useUpdateAPostMutation } from "@/redux/features/posts/postApi";
+import { useGetAPostQuery, useUpdateAPostMutation } from "@/redux/features/posts/postApi";
 
 const ReactQuill = dynamic(
   () => import("react-quill").then((mod) => mod.default),
@@ -35,16 +35,17 @@ if (typeof window !== "undefined" && GlobalQuill) {
 }
 
 const PostEdit = ({
-  post,
+  postData,
   setShowPopup,
   showPopup,
 }: {
-  post: IPost;
+  postData: IPost;
   setShowPopup: CallableFunction;
   showPopup: boolean;
 }) => {
   const [updateAPost, { isLoading }] = useUpdateAPostMutation();
-  
+  const { data, refetch, isFetching } = useGetAPostQuery(postData?._id || "");
+  const post = (data as any)?.data || {};
 //   const currentUser = useAppSelector(selectCurrentUser);
   const [content, setContent] = useState<string>(post?.content || "");
   const [videoURL, setVideoURL] = useState<string>(post?.video || "");
@@ -127,15 +128,27 @@ const PostEdit = ({
   ];
 
   useEffect(() => {
-    if (post) {
-      setContent(post.content);
+    if (postData) {
+      setFileList(
+        postData?.images?.map((url, index) => ({
+          uid: index.toString(),
+          name: `Image ${index + 1}`,
+          status: "done",
+          url,
+        })) || []
+      )
+      setContent(postData?.content || "");
+      setVideoURL(postData?.video || "");
+      setCategory(postData?.category || "");
+      // refetch();
     }
-  }, [post]);
+  }, [postData]);
 
   return (
     <div>
       <Modal
         open={showPopup}
+        loading={isFetching}
         onClose={handlePopup}
         onCancel={handlePopup}
         className="[&&_.ant-modal-content]:p-0 overflow-hidden h-[95vh]"

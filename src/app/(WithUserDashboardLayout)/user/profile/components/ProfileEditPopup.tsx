@@ -71,7 +71,7 @@ function ProfileEditPopup({
       if (isSuccess) {
         message.success("Profile updated successfully.");
         await refetch();
-        setShow(false);
+        setShow(!show);
       }
     } catch (error) {
       console.log(error);

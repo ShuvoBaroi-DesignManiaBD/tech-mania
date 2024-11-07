@@ -8,13 +8,13 @@ import { useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import {
   selectCurrentUser,
-  selectCurrentUserData,
 } from "@/redux/features/auth/authSlice";
 import { useGetCurrentUserQuery } from "@/redux/features/users/userApi";
 import { IUser } from "@/types";
 import CheckoutModel from "@/app/(WithUserDashboardLayout)/pricing/component/CheckoutModel";
-import { MessageOutlined, UserOutlined } from "@ant-design/icons";
+import { MessageOutlined, RightOutlined, UserOutlined } from "@ant-design/icons";
 import TokenProvider from "@/lib/providers/antDesign/TokenProvider";
+import { navigate } from "@/actions/navigate";
 
 const LeftSidebar = () => {
   const currentUser = useAppSelector(selectCurrentUser);
@@ -50,6 +50,11 @@ const LeftSidebar = () => {
             style={{ border: 0 }}
           />
           {/* Subscription Info Card */}
+          <div className="space-y-5">
+
+          {currentUser?.role === "admin" && (
+            <Button type="primary" block icon={<RightOutlined />} iconPosition="end" onClick={() => navigate("/admin/dashboard")}>admin dashboard</Button>
+          )}
           <Card
             title={
               <Title level={4} style={{ color: TokenProvider().colorText }}>
@@ -64,7 +69,7 @@ const LeftSidebar = () => {
               color: TokenProvider()?.colorText,
             }}
             styles={{ body: { padding: 16, margin: 0 }, title: { padding: 0 } }}
-          >
+            >
             <div className="flex flex-col gap-2">
               <Typography.Title
                 level={5}
@@ -114,6 +119,7 @@ const LeftSidebar = () => {
               />
             </div>
           </Card>
+          </div>
         </div>
       </Sider>
     </div>
