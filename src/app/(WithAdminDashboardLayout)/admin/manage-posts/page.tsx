@@ -22,11 +22,11 @@ const Page = () => {
   const [limit, setLimit] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAddPostModalOpen, setIsAddPostModalOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState<IPost | null>();
+  const [selectedPost, setSelectedPost] = useState<IPost | ''>();
   const { data, isFetching } = useGetAllPostsQuery({
     page,
     limit,
-    category: null,
+    category: '',
     sort: '',
   });
   const [deleteAPost] = useDeleteAPostMutation();
@@ -53,7 +53,7 @@ const Page = () => {
       dataIndex: "images",
       key: "images",
       render: (images: string[]) => (
-        <Image src={images[0]} alt="Post Thumbnail" width={60} height={60} />
+        <Image src={images[0] || ""} alt="Post Thumbnail" width={60} height={60} />
       ),
       responsive: ["lg"],
     },

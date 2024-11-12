@@ -4,16 +4,46 @@ import { IPost, TPostInteractions, TResponse } from "@/types";
 
 const postApi = baseAPI.injectEndpoints({
   endpoints: (builder) => ({
-    getAllPosts: builder.query<TResponse<IPost[]>, { page?: number; limit?: number, category: string | null, sort: string, searchTerm?: string | null}>({
-      query: ({ page = 1, limit = 6, category = null, sort = "dsc", searchTerm=null }) => ({
-        url: `/posts/all-posts?page=${page}&limit=${limit}${category ? `&category=${category}` : ""}&sort=createdAt:${sort === "Most Recent" ? "dsc" : "asc"}${searchTerm ? `&searchTerm=${searchTerm}` : ""}`, // ?category=${category}}&sort=${sort}`,
-        method: "GET",
-      }),
+    getAllPosts: builder.query<
+      TResponse<IPost[]>,
+      {
+        page?: number;
+        limit?: number;
+        category: string | null;
+        sort: string;
+        searchTerm?: string | null;
+      }
+    >({
+      query: ({
+        page = 1,
+        limit = 3,
+        category = null,
+        sort = "dsc",
+        searchTerm = null,
+      }) => {
+        // Construct the base URL with required parameters
+        let url = `/posts/all-posts?page=${page}&limit=${limit}`;
+
+        // Add optional parameters if they exist
+        if (searchTerm) {
+          url += `&searchTerm=${encodeURIComponent(searchTerm)}`;
+        }
+        if (category) {
+          url += `&category=${encodeURIComponent(category)}`;
+        }
+
+        // Determine the sorting direction based on `sort` value
+        const sortDirection = sort === "Most Recent" ? "dsc" : "asc";
+        url += `&sort=createdAt:${sortDirection}`;
+
+        return {
+          url,
+          method: "GET",
+        };
+      },
       onQueryStarted: async (arg, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled; // Wait for the query to fulfill
-          
-          // Directly dispatch the data to Redux store
           dispatch(setPosts(data?.data)); // Assuming the API returns the array directly (not inside a `data` object)
         } catch (error) {
           console.error("Error fetching posts:", error);
@@ -22,7 +52,10 @@ const postApi = baseAPI.injectEndpoints({
       providesTags: ["posts"],
     }),
 
-    getPostsOfAUser: builder.query<TResponse<IPost[]>, { id: string, page?: number; limit?: number }>({
+    getPostsOfAUser: builder.query<
+      TResponse<IPost[]>,
+      { id: string; page?: number; limit?: number }
+    >({
       query: ({ id: id, page = 1, limit = 6 }) => ({
         url: `/posts/user-posts/${id}?page=${page}&limit=${limit}`,
         method: "GET",
@@ -31,7 +64,7 @@ const postApi = baseAPI.injectEndpoints({
       //   try {
       //     const { data } = await queryFulfilled; // Wait for the query to fulfill
       //     console.log("Data:", data);
-          
+
       //     // Directly dispatch the data to Redux store
       //     dispatch(setPosts(data?.data)); // Assuming the API returns the array directly (not inside a `data` object)
       //   } catch (error) {
@@ -68,8 +101,8 @@ const postApi = baseAPI.injectEndpoints({
       invalidatesTags: ["posts", "userPosts"], // This invalidates the cache of posts to refetch them after the update
     }),
 
-    deleteAPost: builder.mutation<void, { id: string, userId: string }>({
-      query: ({id,userId}) => ({
+    deleteAPost: builder.mutation<void, { id: string; userId: string }>({
+      query: ({ id, userId }) => ({
         url: `posts/delete-post?postId=${id}&userId=${userId}`,
         method: "PATCH",
         // body: userId
